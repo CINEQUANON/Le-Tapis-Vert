@@ -803,7 +803,7 @@ function renderCalculateur(ev, items) {
     </div>
 
     <div class="elec-section">
-      <h3>⚡ Consommation électrique des appareils</h3>
+      <h3> Consommation électrique des appareils</h3>
       <div class="elec-subtitle">Facteur mix électrique français 2025 (ADEME) : <strong>0,0461 kgCO₂e/kWh</strong></div>
       <div class="elec-form">
         <div class="elec-field">
@@ -821,22 +821,22 @@ function renderCalculateur(ev, items) {
     </div>
 
     <div class="ai-section">
-      <h3>🤖 Estimation IA <span style="font-size:11px;font-weight:400;color:var(--gris)">— pour les éléments absents de la base ADEME</span></h3>
+      <h3>Estimation IA <span style="font-size:11px;font-weight:400;color:var(--gris)">— pour les éléments absents de la base ADEME</span></h3>
       <div class="ai-subtitle">Décrivez un aliment, un produit ou une activité non trouvé(e) dans la base. Vous serez redirigé(e) vers Claude avec la question pré-remplie.</div>
       <div id="aiCounterWidget" style="display:none;align-items:center;gap:8px;font-size:12px;margin-bottom:10px;padding:7px 12px;background:rgba(142,68,173,0.08);border-radius:8px;border:1px solid #c5b8e8">
-        🤖 Requêtes IA cumulées sur cet événement : —
+        Requêtes IA cumulées sur cet événement : —
       </div>
       <div class="ai-form">
         <input type="text" class="ai-input" id="aiQuery" placeholder="Ex. : plateau repas végétarien, badge en tissu recyclé, photobooth…" onkeydown="if(event.key==='Enter')openAI()" />
         <button class="btn-ai" onclick="openAI()">
-          <span>✨</span> Demander à Claude
+          <span></span> Demander à Claude
         </button>
       </div>
       <div class="ai-result" id="aiResult"></div>
     </div>
 
     <div class="manual-section">
-      <h3>✏️ Saisie manuelle d'un poste</h3>
+      <h3>Saisie manuelle d'un poste</h3>
       <div class="manual-subtitle">Entrez directement un nom et la quantité de CO₂e connue (issue d'une estimation IA, d'une autre base, ou d'un calcul propre).</div>
       <div class="manual-form">
         <div class="manual-field">
@@ -1104,7 +1104,7 @@ function addElecItem() {
   if (!kwh||kwh<=0) { showToast("Consommation invalide"); return; }
   const ev = events.find(e => e.id===currentEventId); if(!ev) return;
   ev.items.push({
-    label: name, categorie: "Consommation électrique > Appareils", rubrique: "⚡ Conso. électrique", rubrique_id: "conso_elec",
+    label: name, categorie: "Consommation électrique > Appareils", rubrique: " Conso. électrique", rubrique_id: "conso_elec",
     unite: "kWh", input_unit: "kWh", co2_par_unite: ELEC_FACTOR, quantite: kwh, co2_total: kwh*ELEC_FACTOR, elec: true
   });
   saveEvents(currentEventId); showToast(name+' ajouté !', true);
@@ -1501,9 +1501,9 @@ function renderAbout() {
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Le Tapis Vert utilise la <strong>Base Carbone® officielle de l'ADEME</strong> pour calculer l'empreinte carbone de vos événements.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Les facteurs d'émission sont exprimés en <strong>kgCO₂ équivalent</strong> et couvrent l'ensemble des gaz à effet de serre.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">La fonction <strong>Estimation IA</strong> utilise Claude (Anthropic) pour estimer les facteurs manquants — les émissions liées à chaque requête (~0,003 kgCO₂e) sont automatiquement ajoutées au bilan.</p>
-    <div style="background:var(--vert-pale);border-radius:10px;padding:14px;margin-top:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--vert);margin-bottom:6px">SOURCE</div>
-      <p style="font-size:13px">Base Carbone® — ADEME · Données publiques<br><a href="https://www.bilans-ges.ademe.fr" target="_blank" style="color:var(--vert)">bilans-ges.ademe.fr</a></p>
+    <div style="background:var(--bleu-pale);border-radius:10px;padding:14px;margin-top:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--bleu);margin-bottom:6px">SOURCE</div>
+      <p style="font-size:13px">Base Carbone® — ADEME · Données publiques<br><a href="https://www.bilans-ges.ademe.fr" target="_blank" style="color:var(--bleu)">bilans-ges.ademe.fr</a></p>
     </div>
     <style>
     body {
