@@ -1498,7 +1498,6 @@ function updateCompare() {
 function renderAbout() {
   return `<div style="max-width:600px;margin:0 auto"><div style="background:white;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
     <h1 style="font-size:20px;font-weight:800;margin-bottom:14px">À propos du Tapis Vert</h1>
-    <p style="background-image: url('foret2.jpeg');"/p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Le Tapis Vert utilise la <strong>Base Carbone® officielle de l'ADEME</strong> pour calculer l'empreinte carbone de vos événements.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Les facteurs d'émission sont exprimés en <strong>kgCO₂ équivalent</strong> et couvrent l'ensemble des gaz à effet de serre.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">La fonction <strong>Estimation IA</strong> utilise Claude (Anthropic) pour estimer les facteurs manquants — les émissions liées à chaque requête (~0,003 kgCO₂e) sont automatiquement ajoutées au bilan.</p>
@@ -1506,6 +1505,11 @@ function renderAbout() {
       <div style="font-size:11px;font-weight:700;color:var(--vert);margin-bottom:6px">SOURCE</div>
       <p style="font-size:13px">Base Carbone® — ADEME · Données publiques<br><a href="https://www.bilans-ges.ademe.fr" target="_blank" style="color:var(--vert)">bilans-ges.ademe.fr</a></p>
     </div>
+    <style>
+    body {
+      background-image: url('foret2.jpeg');
+    }
+    </style>
   </div></div>`;
 }
 
