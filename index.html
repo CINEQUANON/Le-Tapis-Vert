@@ -331,7 +331,14 @@ header nav button.active { background: var(--vert); color: white; }
 .btn-primary { padding: 9px 18px; background: var(--vert); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
 .btn-primary:hover { background: var(--vert-clair); }
 .btn-secondary { padding: 9px 18px; background: none; border: 1.5px solid var(--bordure); border-radius: 8px; font-size: 13px; color: var(--gris); cursor: pointer; }
-
+<div class="form-group">
+  <label class="form-label">Association / club organisateur</label>
+  <input type="text" class="form-input" id="eventAssoc" placeholder="Ex. : BDE, RAID…" />
+</div>
+<div class="form-group">
+  <label class="form-label">Nombre de participants (optionnel)</label>
+  <input type="number" class="form-input" id="eventParticipants" min="1" placeholder="Utilisé pour le classement par personne" />
+</div>
 /* LOADING */
 .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 16px; background: white; }
 .loading-spinner { width: 36px; height: 36px; border: 3px solid var(--bordure); border-top-color: var(--vert); border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -443,6 +450,16 @@ header nav button.active { background: var(--vert); color: white; }
   .event-icon-big { font-size: 32px; }
   .event-header-info h1 { font-size: 18px; }
 }
+.rank-table { display: flex; flex-direction: column; gap: 6px; }
+.rank-row { display: grid; grid-template-columns: 36px 32px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 10px; background: var(--gris-pale); }
+.rank-row.rank-top1 { background: #fff8e1; border: 1px solid #f0d080; }
+.rank-row.rank-top2 { background: #f4f4f4; border: 1px solid #d8d8d8; }
+.rank-row.rank-top3 { background: #fdf0e6; border: 1px solid #e8c4a0; }
+.rank-pos { font-size: 18px; font-weight: 800; text-align: center; color: var(--gris); }
+.rank-icon { font-size: 22px; text-align: center; }
+.rank-assoc { font-weight: 700; font-size: 14px; }
+.rank-event { font-size: 12px; color: var(--gris); margin-top: 2px; }
+.rank-score { font-size: 15px; font-weight: 800; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -484,6 +501,7 @@ header nav button.active { background: var(--vert); color: white; }
       <span class="user-email" id="userEmail"></span>
       <button class="btn-logout" onclick="logout()">Déconnexion</button>
     </div>
+    <button id="navRanking" onclick="showView('ranking')">🏆 Classement</button>
   </nav>
 </header>
 
@@ -765,7 +783,7 @@ const COLORS = ['#1a6b3a','#e67e22','#2980b9','#8e44ad','#c0392b','#16a085','#f3
 
 // ===== VIEWS =====
 function showView(v) {
-  ['navEvents','navCompare','navAbout'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['navEvents','navCompare','navRanking','navAbout'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById('nav' + v.charAt(0).toUpperCase() + v.slice(1)).classList.add('active');
   const main = document.getElementById('mainContent');
   if (v === 'events') {
@@ -775,6 +793,9 @@ function showView(v) {
   } else if (v === 'compare') {
     main.innerHTML = renderCompareView();
     initCompareSelects();
+  } else if (v === 'ranking') {
+    main.innerHTML = '<div class="rapport-card"><div class="loading-spinner" style="margin:40px auto"></div></div>';
+    loadRanking();
   } else if (v === 'about') {
     main.innerHTML = renderAbout();
   }
@@ -1599,6 +1620,81 @@ function updateCompare() {
     <div class="compare-header-row"><div>Rubrique</div><div>${evA.icon} ${evA.name}</div><div>${evB.icon} ${evB.name}</div><div>Écart</div></div>
     ${tableRows}${totalRow}
     <div class="compare-bar-section" style="margin-top:24px"><h3 style="font-size:13px;font-weight:700;margin-bottom:14px">Comparaison par rubrique</h3>${barGroups}</div>`;
+}
+let rankingMode = 'perPerson'; // 'perPerson' ou 'total'
+
+async function fetchLeaderboard() {
+  const doFetch = (token) => fetch(SB_URL + '/rest/v1/leaderboard?select=*', {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + token }
+  });
+  let res = await doFetch(accessToken);
+  if (res.status === 401) { await refreshSession(); res = await doFetch(accessToken); }
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function loadRanking() {
+  try {
+    const rows = await fetchLeaderboard();
+    window._leaderboardData = rows;
+    renderRankingView();
+  } catch(e) {
+    document.getElementById('mainContent').innerHTML =
+      '<div class="rapport-card"><div class="empty-items">Impossible de charger le classement.<br><small style="color:var(--gris)">'+e.message+'</small></div></div>';
+  }
+}
+
+function setRankingMode(mode) {
+  rankingMode = mode;
+  renderRankingView();
+}
+
+function renderRankingView() {
+  const rows = window._leaderboardData || [];
+  const withAssoc = rows.filter(r => r.association && r.association.trim());
+
+  let ranked;
+  if (rankingMode === 'perPerson') {
+    ranked = withAssoc
+      .filter(r => r.participants && r.participants > 0)
+      .map(r => ({...r, score: r.total_co2e / r.participants}))
+      .sort((a,b) => a.score - b.score);
+  } else {
+    ranked = withAssoc
+      .map(r => ({...r, score: r.total_co2e}))
+      .sort((a,b) => a.score - b.score);
+  }
+
+  const medals = ['🥇','🥈','🥉'];
+  const rowsHtml = ranked.length ? ranked.map((r,i) => `
+    <div class="rank-row ${i<3?'rank-top'+(i+1):''}">
+      <div class="rank-pos">${medals[i] || (i+1)}</div>
+      <div class="rank-icon">${r.icon||'🎉'}</div>
+      <div class="rank-info">
+        <div class="rank-assoc">${r.association}</div>
+        <div class="rank-event">${r.event_name}${r.event_date ? ' · '+new Date(r.event_date).toLocaleDateString('fr-FR') : ''}</div>
+      </div>
+      <div class="rank-score ${co2Color(r.score)}">
+        ${rankingMode==='perPerson' ? formatCO2(r.score)+' / pers.' : formatCO2(r.score)}
+      </div>
+    </div>`).join('') : '<div class="empty-items">Aucun événement classable pour le moment.</div>';
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="rapport-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <h2 style="font-size:16px;font-weight:800">🏆 Classement des événements les plus vertueux</h2>
+        <div class="tab-bar" style="margin:0">
+          <button class="tab-btn ${rankingMode==='perPerson'?'active':''}" onclick="setRankingMode('perPerson')">Par participant</button>
+          <button class="tab-btn ${rankingMode==='total'?'active':''}" onclick="setRankingMode('total')">Total</button>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--gris);margin-bottom:16px;padding:10px 14px;background:var(--gris-pale);border-radius:8px">
+        ${rankingMode==='perPerson'
+          ? 'Classement par intensité carbone (kgCO₂e ÷ nombre de participants) — seuls les événements ayant renseigné un nombre de participants apparaissent ici. Plus le score est bas, plus l\\'événement est vertueux.'
+          : 'Classement par émissions totales — tous les événements ayant renseigné une association apparaissent, quelle que soit leur taille.'}
+      </div>
+      <div class="rank-table">${rowsHtml}</div>
+    </div>`;
 }
 
 // ===== ABOUT =====
