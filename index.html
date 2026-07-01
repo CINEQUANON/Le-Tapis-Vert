@@ -1726,10 +1726,13 @@ function openNewEventModal() {
   document.getElementById('eventName').value = '';
   document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('eventDesc').value = '';
+  document.getElementById('eventAssoc').value = localStorage.getItem('lastAssociation') || '';
+  document.getElementById('eventParticipants').value = '';
   selectIcon('🎪');
   document.getElementById('eventModal').classList.add('visible');
   setTimeout(() => document.getElementById('eventName').focus(), 100);
 }
+
 function openEditModal(evId) {
   editingEventId = evId;
   const ev = events.find(e => e.id===evId); if(!ev) return;
@@ -1737,23 +1740,24 @@ function openEditModal(evId) {
   document.getElementById('eventName').value = ev.name;
   document.getElementById('eventDate').value = ev.date||'';
   document.getElementById('eventDesc').value = ev.desc||'';
+  document.getElementById('eventAssoc').value = ev.association||'';
+  document.getElementById('eventParticipants').value = ev.participants||'';
   selectIcon(ev.icon);
   document.getElementById('eventModal').classList.add('visible');
 }
-function closeModal() { document.getElementById('eventModal').classList.remove('visible'); }
-function selectIcon(icon) {
-  selectedIcon = icon;
-  document.querySelectorAll('.icon-opt').forEach(b => b.classList.toggle('active', b.textContent===icon));
-}
+
 function saveEvent() {
   const name = document.getElementById('eventName').value.trim();
   if (!name) { document.getElementById('eventName').focus(); return; }
+  const association = document.getElementById('eventAssoc').value.trim();
+  const participants = parseInt(document.getElementById('eventParticipants').value) || null;
+  if (association) localStorage.setItem('lastAssociation', association);
   if (editingEventId) {
     const ev = events.find(e => e.id===editingEventId);
-    if (ev) { ev.name=name; ev.date=document.getElementById('eventDate').value; ev.desc=document.getElementById('eventDesc').value.trim(); ev.icon=selectedIcon; }
+    if (ev) { ev.name=name; ev.date=document.getElementById('eventDate').value; ev.desc=document.getElementById('eventDesc').value.trim(); ev.icon=selectedIcon; ev.association=association; ev.participants=participants; }
     currentEventId = editingEventId;
   } else {
-    const ev = { id: Date.now().toString(), name, date: document.getElementById('eventDate').value, desc: document.getElementById('eventDesc').value.trim(), icon: selectedIcon, items: [] };
+    const ev = { id: Date.now().toString(), name, date: document.getElementById('eventDate').value, desc: document.getElementById('eventDesc').value.trim(), icon: selectedIcon, association, participants, items: [] };
     events.unshift(ev); currentEventId = ev.id;
   }
   saveEvents(currentEventId); closeModal(); renderSidebar();
