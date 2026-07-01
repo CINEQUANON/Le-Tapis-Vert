@@ -345,6 +345,104 @@ header nav button.active { background: var(--vert); color: white; }
 .c0{fill:#1a6b3a} .c1{fill:#e67e22} .c2{fill:#2980b9} .c3{fill:#8e44ad} .c4{fill:#c0392b} .c5{fill:#16a085} .c6{fill:#f39c12} .c7{fill:#2c3e50} .c8{fill:#27ae60} .c9{fill:#e74c3c} .c10{fill:#3498db} .c11{fill:#9b59b6}
 .s0{stroke:#1a6b3a} .s1{stroke:#e67e22} .s2{stroke:#2980b9} .s3{stroke:#8e44ad} .s4{stroke:#c0392b} .s5{stroke:#16a085} .s6{stroke:#f39c12} .s7{stroke:#2c3e50} .s8{stroke:#27ae60} .s9{stroke:#e74c3c} .s10{stroke:#3498db} .s11{stroke:#9b59b6}
 .bg0{background:#1a6b3a} .bg1{background:#e67e22} .bg2{background:#2980b9} .bg3{background:#8e44ad} .bg4{background:#c0392b} .bg5{background:#16a085} .bg6{background:#f39c12} .bg7{background:#2c3e50} .bg8{background:#27ae60} .bg9{background:#e74c3c} .bg10{background:#3498db} .bg11{background:#9b59b6}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablette */
+@media (max-width: 1024px) {
+  .app { grid-template-columns: 220px 1fr; }
+  .cards-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .compare-summary { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+}
+
+/* Mobile / petites tablettes */
+@media (max-width: 768px) {
+  header { flex-wrap: wrap; height: auto; padding: 10px 14px; gap: 8px; }
+  .logo { font-size: 18px; }
+  .ademe-badge { display: none; }
+  header nav { width: 100%; justify-content: space-between; margin-left: 0; }
+  header nav button { padding: 6px 8px; font-size: 12px; }
+  .user-bar { margin-left: 0; padding-left: 0; border-left: none; }
+  .user-email { display: none; }
+
+  /* Sidebar passe au-dessus du contenu, en accordéon scrollable */
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: relative; top: 0; height: auto; max-height: 260px;
+    border-right: none; border-bottom: 1px solid var(--bordure);
+  }
+  .main { padding: 14px; }
+
+  /* Header d'événement */
+  .event-header { flex-direction: column; align-items: stretch; gap: 10px; }
+  .event-header-co2 { text-align: left; }
+  .total-value { font-size: 26px; }
+
+  /* Tabs */
+  .tab-bar { width: 100%; overflow-x: auto; }
+  .tab-btn { flex: 1; white-space: nowrap; padding: 8px 10px; font-size: 12px; }
+
+  /* Grilles de cartes */
+  .cards-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .stat-card, .kpi-box { padding: 10px; }
+  .stat-card-value, .kpi-value { font-size: 17px; }
+
+  /* Donut + légende empilés */
+  .donut-row { grid-template-columns: 1fr; justify-items: center; text-align: left; }
+
+  /* Formulaires (élec / IA / manuel) */
+  .elec-form, .ai-form, .manual-form { flex-direction: column; align-items: stretch; }
+  .elec-field, .manual-field { width: 100%; }
+  .elec-input, .manual-input, .ai-input { width: 100% !important; }
+  .btn-add, .btn-ai, .btn-manual { width: 100%; }
+
+  /* Recherche */
+  .cat-pills { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+  .cat-pill { flex-shrink: 0; }
+  .selected-item-row { flex-direction: column; align-items: stretch; }
+  .quantity-group { flex-wrap: wrap; }
+  .co2-preview { text-align: left; }
+
+  /* Tableau des postes -> cartes empilées */
+  .items-table-header { display: none; }
+  .item-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+  .item-row-qty::before { content: "Quantité : "; color: var(--gris); }
+  .item-row-unit::before { content: "Unité : "; color: var(--gris); }
+  .item-row-co2::before { content: "CO₂e : "; color: var(--gris); font-weight: 400; }
+  .btn-del { justify-self: flex-end; }
+
+  /* Comparateur */
+  .compare-select-row { grid-template-columns: 1fr; gap: 6px; }
+  .compare-vs { padding: 2px 0; }
+  .compare-summary { grid-template-columns: 1fr; }
+  .compare-header-row, .compare-row { grid-template-columns: 1fr 1fr; }
+  .compare-header-row div:nth-child(3), .compare-header-row div:nth-child(4),
+  .compare-row div:nth-child(3), .compare-row div:nth-child(4) { display: none; }
+  .compare-bar-name { width: 70px; font-size: 9px; }
+
+  /* Modale */
+  .modal { padding: 18px; width: 92vw; }
+  .icon-picker { justify-content: center; }
+
+  /* Auth */
+  .auth-box { padding: 24px 20px; width: 90vw; }
+
+  /* Save bar */
+  .save-bar { flex-direction: column; }
+}
+
+/* Très petits écrans */
+@media (max-width: 400px) {
+  .cards-grid, .kpi-grid { grid-template-columns: 1fr; }
+  .event-icon-big { font-size: 32px; }
+  .event-header-info h1 { font-size: 18px; }
+}
 </style>
 </head>
 <body>
