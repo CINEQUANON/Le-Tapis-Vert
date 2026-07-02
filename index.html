@@ -909,7 +909,7 @@ function renderCalculateur(ev, items) {
     </div>
 
     <div class="elec-section">
-      <h3>⚡ Consommation électrique des appareils</h3>
+      <h3> Consommation électrique des appareils</h3>
       <div class="elec-subtitle">Facteur mix électrique français 2025 (ADEME) : <strong>0,0461 kgCO₂e/kWh</strong></div>
       <div class="elec-form">
         <div class="elec-field">
@@ -927,22 +927,22 @@ function renderCalculateur(ev, items) {
     </div>
 
     <div class="ai-section">
-      <h3>🤖 Estimation IA <span style="font-size:11px;font-weight:400;color:var(--gris)">— pour les éléments absents de la base ADEME</span></h3>
+      <h3> Estimation IA <span style="font-size:11px;font-weight:400;color:var(--gris)">— pour les éléments absents de la base ADEME</span></h3>
       <div class="ai-subtitle">Décrivez un aliment, un produit ou une activité non trouvé(e) dans la base. Vous serez redirigé(e) vers Claude avec la question pré-remplie.</div>
       <div id="aiCounterWidget" style="display:none;align-items:center;gap:8px;font-size:12px;margin-bottom:10px;padding:7px 12px;background:rgba(142,68,173,0.08);border-radius:8px;border:1px solid #c5b8e8">
-        🤖 Requêtes IA cumulées sur cet événement : —
+         Requêtes IA cumulées sur cet événement : —
       </div>
       <div class="ai-form">
         <input type="text" class="ai-input" id="aiQuery" placeholder="Ex. : plateau repas végétarien, badge en tissu recyclé, photobooth…" onkeydown="if(event.key==='Enter')openAI()" />
         <button class="btn-ai" onclick="openAI()">
-          <span>✨</span> Demander à Claude
+          <span></span> Demander à Claude
         </button>
       </div>
       <div class="ai-result" id="aiResult"></div>
     </div>
 
     <div class="manual-section">
-      <h3>✏️ Saisie manuelle d'un poste</h3>
+      <h3> Saisie manuelle d'un poste</h3>
       <div class="manual-subtitle">Entrez directement un nom et la quantité de CO₂e connue (issue d'une estimation IA, d'une autre base, ou d'un calcul propre).</div>
       <div class="manual-form">
         <div class="manual-field">
