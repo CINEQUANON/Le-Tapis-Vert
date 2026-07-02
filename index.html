@@ -478,7 +478,6 @@ header nav button.active { background: var(--vert); color: white; }
   <nav>
     <button class="active" id="navEvents" onclick="showView('events')">Mes événements</button>
     <button id="navCompare" onclick="showView('compare')">⚖️ Comparer</button>
-    <button id="navAide" onclick="showView('aide')">Comprendre le bilan carbone</button>
     <button id="navAbout" onclick="showView('about')">À propos</button>
     <div class="user-bar">
       <span class="user-email" id="userEmail"></span>
@@ -765,7 +764,7 @@ const COLORS = ['#1a6b3a','#e67e22','#2980b9','#8e44ad','#c0392b','#16a085','#f3
 
 // ===== VIEWS =====
 function showView(v) {
-  ['navEvents','navCompare','navAide','navAbout'].forEach(id => document.getElementById(id).classList.remove('active'));
+  ['navEvents','navCompare','navAbout'].forEach(id => document.getElementById(id).classList.remove('active'));
   document.getElementById('nav' + v.charAt(0).toUpperCase() + v.slice(1)).classList.add('active');
   const main = document.getElementById('mainContent');
   if (v === 'events') {
@@ -775,9 +774,6 @@ function showView(v) {
   } else if (v === 'compare') {
     main.innerHTML = renderCompareView();
     initCompareSelects();
-  } else if (v === 'aide') {
-    main.innerHTML = renderAide();
-  }
   } else if (v === 'about') {
     main.innerHTML = renderAbout();
   }
@@ -1603,10 +1599,20 @@ function updateCompare() {
     ${tableRows}${totalRow}
     <div class="compare-bar-section" style="margin-top:24px"><h3 style="font-size:13px;font-weight:700;margin-bottom:14px">Comparaison par rubrique</h3>${barGroups}</div>`;
 }
-// ===== AIDE =====
-function renderAide() {
-  return `
-<div style="max-width:800px;margin:0 auto;background:#f8f9fa;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
+
+// ===== ABOUT =====
+function renderAbout() {
+  return `<div style="max-width:600px;margin:0 auto"><div style="background:white;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
+    <h1 style="font-size:20px;font-weight:800;margin-bottom:14px">À propos du Tapis Vert</h1>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Le Tapis Vert est un calculateur carbone développé par l'association <a href="https://www.instagram.com/cinequanonessec/" target="_blank" style="color:var(--bleu)">CINEQUANON</a>, à destination des associations et autres petites organisations soucieuses d'évaluer l'impact de leurs activités. Il utilise la <strong>Base Carbone® officielle de l'ADEME</strong> pour calculer l'empreinte carbone de vos événements.</p>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Les facteurs d'émission sont exprimés en <strong>kgCO₂ équivalent</strong> et couvrent l'ensemble des gaz à effet de serre.</p>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">La fonction <strong>Estimation IA</strong> utilise Claude (Anthropic) pour estimer les facteurs manquants — les émissions liées à chaque requête (~0,003 kgCO₂e) sont automatiquement ajoutées au bilan.</p>
+    <div style="background:var(--vert-pale);border-radius:10px;padding:14px;margin-top:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--vert);margin-bottom:6px">SOURCE</div>
+      <p style="font-size:13px">Base Carbone® — ADEME · Données publiques<br><a href="https://www.bilans-ges.ademe.fr" target="_blank" style="color:var(--vert)">bilans-ges.ademe.fr</a></p>
+    </div>
+  </div></div>;
+  <div style="max-width:800px;margin:0 auto;background:#f8f9fa;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
   <h1 style="font-size:24px;font-weight:800;margin-bottom:20px;color:#2d3748;text-align:center">Comprendre la méthodologie Bilan Carbone® pour vos événements</h1>
 
   <p style="font-size:15px;line-height:1.7;margin-bottom:20px;color:#4a5568;">
@@ -1915,21 +1921,6 @@ function renderAide() {
   </p>
 </div>
   `;
-}
-
-  
-// ===== ABOUT =====
-function renderAbout() {
-  return `<div style="max-width:600px;margin:0 auto"><div style="background:white;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
-    <h1 style="font-size:20px;font-weight:800;margin-bottom:14px">À propos du Tapis Vert</h1>
-    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Le Tapis Vert est un calculateur carbone développé par l'association <a href="https://www.instagram.com/cinequanonessec/" target="_blank" style="color:var(--bleu)">CINEQUANON</a>, à destination des associations et autres petites organisations soucieuses d'évaluer l'impact de leurs activités. Il utilise la <strong>Base Carbone® officielle de l'ADEME</strong> pour calculer l'empreinte carbone de vos événements.</p>
-    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Les facteurs d'émission sont exprimés en <strong>kgCO₂ équivalent</strong> et couvrent l'ensemble des gaz à effet de serre.</p>
-    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">La fonction <strong>Estimation IA</strong> utilise Claude (Anthropic) pour estimer les facteurs manquants — les émissions liées à chaque requête (~0,003 kgCO₂e) sont automatiquement ajoutées au bilan.</p>
-    <div style="background:var(--vert-pale);border-radius:10px;padding:14px;margin-top:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--vert);margin-bottom:6px">SOURCE</div>
-      <p style="font-size:13px">Base Carbone® — ADEME · Données publiques<br><a href="https://www.bilans-ges.ademe.fr" target="_blank" style="color:var(--vert)">bilans-ges.ademe.fr</a></p>
-    </div>
-  </div></div>`;
 }
 
 // ===== MODAL =====
