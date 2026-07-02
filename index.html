@@ -775,6 +775,9 @@ function showView(v) {
   } else if (v === 'compare') {
     main.innerHTML = renderCompareView();
     initCompareSelects();
+  } else if (v === 'aide') {
+    main.innerHTML = renderAide();
+  }
   } else if (v === 'about') {
     main.innerHTML = renderAbout();
   }
