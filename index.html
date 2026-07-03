@@ -309,7 +309,6 @@ header nav button.active { background: var(--vert); color: white; }
 .auth-success { background: var(--vert-pale); color: var(--vert); padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 14px; display: none; }
 .auth-success.visible { display: block; }
 .user-bar { display: flex; align-items: center; gap: 10px; margin-left: 12px; padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.15); }
-.user-nom { font-size: 12px; color: #aaa; }
 .user-email { font-size: 12px; color: #aaa; }
 .btn-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: #aaa; padding: 5px 10px; border-radius: 7px; font-size: 11px; cursor: pointer; }
 .btn-logout:hover { color: white; border-color: rgba(255,255,255,0.4); }
@@ -364,7 +363,6 @@ header nav button.active { background: var(--vert); color: white; }
   header nav { width: 100%; justify-content: space-between; margin-left: 0; }
   header nav button { padding: 6px 8px; font-size: 12px; }
   .user-bar { margin-left: 0; padding-left: 0; border-left: none; }
-  .user-nom { display: none; }
   .user-email { display: none; }
 
   /* Sidebar passe au-dessus du contenu, en accordéon scrollable */
@@ -466,7 +464,6 @@ header nav button.active { background: var(--vert); color: white; }
     </div>
     <div class="auth-error" id="authError"></div>
     <div class="auth-success" id="authSuccess"></div>
-    <input type="nom" class="auth-input" id="authNom" placeholder="Nom de l'asso" autocomplete="nom" />
     <input type="email" class="auth-input" id="authEmail" placeholder="Adresse e-mail" autocomplete="email" />
     <input type="password" class="auth-input" id="authPassword" placeholder="Mot de passe (6 caractères min.)" autocomplete="current-password" />
     <button class="btn-auth" id="btnAuth" onclick="submitAuth()">Se connecter</button>
@@ -1792,7 +1789,6 @@ function switchAuthTab(mode) {
 }
 
 async function submitAuth() {
-  const password = document.getElementById('authNom').value;
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
   const errEl = document.getElementById('authError');
@@ -1801,7 +1797,7 @@ async function submitAuth() {
   errEl.classList.remove('visible');
   okEl.classList.remove('visible');
 
-  if (!nom || !email || !password) { errEl.textContent = 'Entrez un pseudo, un e-mail et un mot de passe'; errEl.classList.add('visible'); return; }
+  if (!email || !password) { errEl.textContent = 'Entrez un pseudo, un e-mail et un mot de passe'; errEl.classList.add('visible'); return; }
   if (password.length < 6) { errEl.textContent = 'Le mot de passe doit faire au moins 6 caractères'; errEl.classList.add('visible'); return; }
 
   btn.disabled = true;
@@ -1809,11 +1805,11 @@ async function submitAuth() {
 
   try {
     if (authMode === 'login') {
-      const data = await sbAuth('token?grant_type=password', { nom,email, password });
+      const data = await sbAuth('token?grant_type=password', { email, password });
       saveSession(data);
       await enterApp();
     } else {
-      const data = await sbAuth('signup', { nom,email, password });
+      const data = await sbAuth('signup', { email, password });
       if (data.access_token) {
         saveSession(data);
         await enterApp();
@@ -1837,7 +1833,6 @@ function logout() {
   currentEventId = null;
   document.getElementById('appRoot').style.display = 'none';
   document.getElementById('authScreen').classList.add('visible');
-  document.getElementById('authNom').value = '';
   document.getElementById('authEmail').value = '';
   document.getElementById('authPassword').value = '';
 }
