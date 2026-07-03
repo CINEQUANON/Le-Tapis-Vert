@@ -309,6 +309,7 @@ header nav button.active { background: var(--vert); color: white; }
 .auth-success { background: var(--vert-pale); color: var(--vert); padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-bottom: 14px; display: none; }
 .auth-success.visible { display: block; }
 .user-bar { display: flex; align-items: center; gap: 10px; margin-left: 12px; padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.15); }
+.user-nom { font-size: 12px; color: #aaa; }
 .user-email { font-size: 12px; color: #aaa; }
 .btn-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: #aaa; padding: 5px 10px; border-radius: 7px; font-size: 11px; cursor: pointer; }
 .btn-logout:hover { color: white; border-color: rgba(255,255,255,0.4); }
@@ -363,6 +364,7 @@ header nav button.active { background: var(--vert); color: white; }
   header nav { width: 100%; justify-content: space-between; margin-left: 0; }
   header nav button { padding: 6px 8px; font-size: 12px; }
   .user-bar { margin-left: 0; padding-left: 0; border-left: none; }
+  .user-nom { display: none; }
   .user-email { display: none; }
 
   /* Sidebar passe au-dessus du contenu, en accordéon scrollable */
@@ -490,7 +492,7 @@ header nav button.active { background: var(--vert); color: white; }
     <button id="navAbout" onclick="showView('about')">À propos</button>
     <button id="navPrivacy" onclick="showView('privacy')">Confidentialité</button>
     <div class="user-bar">
-      <span class="user-email" id="userEmail"></span>
+      <span class="user-nom" id="userEmail"></span>
       <button class="btn-logout" onclick="logout()">Déconnexion</button>
     </div>
   </nav>
