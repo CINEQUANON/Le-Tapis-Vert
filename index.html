@@ -195,8 +195,8 @@ header nav button.active { background: var(--vert); color: white; }
 .items-section { background: white; border-radius: 8px; border: 1px solid var(--bordure); overflow: hidden; }
 .items-section-header { padding: 14px 18px; border-bottom: 1px solid var(--bordure); display: flex; align-items: center; gap: 10px; }
 .items-section-header h3 { font-size: 13px; font-weight: 700; flex: 1; }
-.items-table-header { display: grid; grid-template-columns: 1fr 100px 90px 80px 36px; gap: 8px; padding: 8px 18px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gris); border-bottom: 1px solid var(--bordure); background: var(--gris-pale); }
-.item-row { display: grid; grid-template-columns: 1fr 100px 90px 80px 36px; gap: 8px; padding: 10px 18px; border-bottom: 1px solid var(--bordure); align-items: center; transition: background 0.1s; }
+.items-table-header { display: grid; grid-template-columns: 1fr 100px 90px 80px 64px; gap: 8px; padding: 8px 18px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gris); border-bottom: 1px solid var(--bordure); background: var(--gris-pale); }
+.item-row { display: grid; grid-template-columns: 1fr 100px 90px 80px 64px; gap: 8px; padding: 10px 18px; border-bottom: 1px solid var(--bordure); align-items: center; transition: background 0.1s; }
 .item-row:last-child { border-bottom: none; }
 .item-row:hover { background: var(--gris-pale); }
 .item-row-name { font-size: 12px; font-weight: 600; }
@@ -204,8 +204,10 @@ header nav button.active { background: var(--vert); color: white; }
 .item-row-qty { font-size: 12px; }
 .item-row-unit { font-size: 11px; color: var(--gris); }
 .item-row-co2 { font-size: 12px; font-weight: 700; color: var(--vert); }
+.item-row-actions { display: flex; gap: 4px; justify-content: flex-end; }
 .btn-del { width: 26px; height: 26px; border-radius: 4px; border: none; background: none; color: #ccc; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; transition: all 0.1s; }
 .btn-del:hover { background: #fef2f2; color: var(--rouge); }
+.btn-del.edit:hover { background: var(--vert-pale); color: var(--vert); }
 .empty-items { padding: 36px; text-align: center; color: var(--gris); font-size: 13px; }
 
 /* COMPARE */
@@ -538,6 +540,10 @@ header nav button.active { background: var(--vert); color: white; }
     <div class="form-group">
       <label class="form-label">Description (optionnel)</label>
       <input type="text" class="form-input" id="eventDesc" placeholder="Ex. : 200 participants, 2 jours" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nombre de participants (optionnel)</label>
+      <input type="number" class="form-input" id="eventParticipants" min="1" step="1" placeholder="Ex. : 150" />
     </div>
     <div class="form-group">
       <label class="form-label">Icône</label>
@@ -916,12 +922,13 @@ function renderEventDetail() {
       <div class="event-icon-big">${ev.icon}</div>
       <div class="event-header-info">
         <h1>${ev.name}</h1>
-        <div class="event-meta">${dateStr}${ev.desc ? ' · '+ev.desc : ''}</div>
+        <div class="event-meta">${dateStr}${ev.desc ? ' · '+ev.desc : ''}${ev.participants ? ' · '+ev.participants+' participant'+(ev.participants>1?'s':'') : ''}</div>
       </div>
       <div class="event-header-co2">
         <div class="total-label">Total émissions</div>
         <div class="total-value ${co2Color(total)}">${total>=1000?(total/1000).toFixed(2):total.toFixed(2)}</div>
         <div class="total-unit">${total>=1000?'tCO₂e':'kgCO₂e'}</div>
+        ${ev.participants ? `<div style="font-size:11px;color:var(--gris);margin-top:4px">${formatCO2(total/ev.participants)} / participant</div>` : ''}
       </div>
     </div>
     <div class="tab-bar">
@@ -1105,6 +1112,7 @@ function renderRapport(ev, items, total, sortedRubrics) {
         <div class="kpi-box"><div class="kpi-value">${formatCO2(total)}</div><div class="kpi-label">Total émissions</div></div>
         <div class="kpi-box"><div class="kpi-value">${items.length}</div><div class="kpi-label">Postes comptabilisés</div></div>
         <div class="kpi-box"><div class="kpi-value">${sortedRubrics.length}</div><div class="kpi-label">Rubriques concernées</div></div>
+        ${ev.participants ? `<div class="kpi-box"><div class="kpi-value">${formatCO2(total/ev.participants)}</div><div class="kpi-label">Par participant (${ev.participants})</div></div>` : ''}
         ${(ev.aiRequests||0) > 0 ? `<div class="kpi-box"><div class="kpi-value" style="color:#8e44ad">${ev.aiRequests}</div><div class="kpi-label">Requêtes IA · ${formatCO2((ev.aiRequests||0)*0.003)}</div></div>` : ''}
         <div class="kpi-box"><div class="kpi-value">${formatCO2(sortedRubrics[0]?.[1]||0)}</div><div class="kpi-label">Rubrique principale<br><small style="font-weight:400">${sortedRubrics[0]?.[0]||'—'}</small></div></div>
       </div>
@@ -1154,7 +1162,10 @@ function renderListe(ev, items, total) {
           <div class="item-row-qty">${it.quantite.toLocaleString('fr-FR')}</div>
           <div class="item-row-unit">${it.input_unit}</div>
           <div class="item-row-co2 ${co2Color(it.co2_total)}">${formatCO2(it.co2_total)}</div>
-          <div><button class="btn-del" onclick="removeItem('${ev.id}',${idx})">${icon('x',12)}</button></div>
+          <div class="item-row-actions">
+            <button class="btn-del edit" onclick="editItem('${ev.id}',${idx})" title="Modifier la quantité">${icon('pencil',12)}</button>
+            <button class="btn-del" onclick="removeItem('${ev.id}',${idx})" title="Supprimer">${icon('x',12)}</button>
+          </div>
         </div>`).join('')}
       <div style="display:grid;grid-template-columns:1fr 100px 90px 80px 36px;gap:8px;padding:10px 18px;background:var(--vert-pale);font-weight:700;font-size:12px;border-top:2px solid var(--vert)">
         <div>TOTAL</div><div></div><div></div><div class="co2-low">${formatCO2(total)}</div><div></div>
@@ -1254,6 +1265,21 @@ function removeItem(evId, idx) {
   const ev = events.find(e => e.id===evId); if(!ev) return;
   const name = ev.items[idx].label;
   ev.items.splice(idx,1); saveEvents(evId); showToast(name+' supprimé'); renderEventDetail(); renderSidebar();
+}
+
+function editItem(evId, idx) {
+  const ev = events.find(e => e.id===evId); if(!ev) return;
+  const it = ev.items[idx]; if(!it) return;
+  const raw = prompt('Modifier la quantité pour « ' + it.label + ' » (' + it.input_unit + ') :', it.quantite);
+  if (raw === null) return; // annulé
+  const qty = parseFloat(String(raw).replace(',', '.'));
+  if (!qty || qty <= 0) { showToast('Quantité invalide'); return; }
+  it.quantite = qty;
+  it.co2_total = qty * it.co2_par_unite;
+  saveEvents(evId);
+  showToast(it.label + ' mis à jour', true);
+  renderEventDetail();
+  renderSidebar();
 }
 
 // ===== ELEC =====
@@ -1925,6 +1951,7 @@ function openNewEventModal() {
   document.getElementById('eventName').value = '';
   document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('eventDesc').value = '';
+  document.getElementById('eventParticipants').value = '';
   selectIcon('🎪');
   document.getElementById('eventModal').classList.add('visible');
   setTimeout(() => document.getElementById('eventName').focus(), 100);
@@ -1936,6 +1963,7 @@ function openEditModal(evId) {
   document.getElementById('eventName').value = ev.name;
   document.getElementById('eventDate').value = ev.date||'';
   document.getElementById('eventDesc').value = ev.desc||'';
+  document.getElementById('eventParticipants').value = ev.participants||'';
   selectIcon(ev.icon);
   document.getElementById('eventModal').classList.add('visible');
 }
@@ -1947,12 +1975,14 @@ function selectIcon(icon) {
 function saveEvent() {
   const name = document.getElementById('eventName').value.trim();
   if (!name) { document.getElementById('eventName').focus(); return; }
+  const participantsRaw = document.getElementById('eventParticipants').value;
+  const participants = participantsRaw ? parseInt(participantsRaw, 10) : null;
   if (editingEventId) {
     const ev = events.find(e => e.id===editingEventId);
-    if (ev) { ev.name=name; ev.date=document.getElementById('eventDate').value; ev.desc=document.getElementById('eventDesc').value.trim(); ev.icon=selectedIcon; }
+    if (ev) { ev.name=name; ev.date=document.getElementById('eventDate').value; ev.desc=document.getElementById('eventDesc').value.trim(); ev.icon=selectedIcon; ev.participants=participants; }
     currentEventId = editingEventId;
   } else {
-    const ev = { id: Date.now().toString(), name, date: document.getElementById('eventDate').value, desc: document.getElementById('eventDesc').value.trim(), icon: selectedIcon, items: [] };
+    const ev = { id: Date.now().toString(), name, date: document.getElementById('eventDate').value, desc: document.getElementById('eventDesc').value.trim(), icon: selectedIcon, participants, items: [] };
     events.unshift(ev); currentEventId = ev.id;
   }
   saveEvents(currentEventId); closeModal(); renderSidebar();
