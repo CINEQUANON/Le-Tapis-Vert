@@ -271,6 +271,7 @@ header nav button.active { background: var(--vert); color: white; }
 .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
 .pill-ai { background: #f0edf7; color: #6f5f8f; }
 .pill-elec { background: #e8f4fd; color: var(--bleu); }
+.pill-essec { background: #eef3fc; color: #2c5ea0; }
 
 /* SAVE BAR */
 .save-bar { display: flex; gap: 6px; margin-top: 10px; }
@@ -664,6 +665,110 @@ function eventTypeLabel(id) { return eventTypeInfo(id).label; }
 function onEventTypeChange() {
   const type = document.getElementById('eventType')?.value;
   if (type) selectIcon(eventTypeInfo(type).icon);
+}
+
+// ===== FONCTIONNEMENT GÉNÉRAL — DONNÉES ESSEC (fichier "Bilan carbone COP", onglet 2) =====
+// Quote-part électricité/chauffage des locaux associatifs, issue du Bilan Carbone® de l'ESSEC
+// (répartition au m² du total campus), et facteur de construction générique (Base Carbone ADEME),
+// amorti sur 30 ans comme dans le fichier ESSEC.
+const ESSEC_LOCAL_FACTORS = {
+  tailleDefaut: 15,          // m² — taille moyenne par défaut d'un local d'association ESSEC
+  nbAssosDefaut: 3,          // nombre d'associations partageant en moyenne un même local
+  repartitionDefaut: 0.33,   // part d'usage du local attribuée à l'association (33% par défaut)
+  elecTotal: 247777,         // kgCO2e — quote-part électricité (Bilan Carbone ESSEC)
+  chauffTotal: 988865,       // kgCO2e — quote-part chauffage (Bilan Carbone ESSEC)
+  surfaceTotale: 85151,      // m² — surface totale considérée dans le Bilan Carbone ESSEC
+  constructionFacteur: 440,  // kgCO2e/m² — construction d'un bâtiment tertiaire (Base Carbone ADEME)
+  amortissement: 30          // années d'amortissement de la construction
+};
+function essecElecFactor() { return ESSEC_LOCAL_FACTORS.elecTotal / ESSEC_LOCAL_FACTORS.surfaceTotale; }
+function essecChauffFactor() { return ESSEC_LOCAL_FACTORS.chauffTotal / ESSEC_LOCAL_FACTORS.surfaceTotale; }
+function essecConstructionFactorAn() { return ESSEC_LOCAL_FACTORS.constructionFacteur / ESSEC_LOCAL_FACTORS.amortissement; }
+
+function renderEssecLocalSection() {
+  const f = ESSEC_LOCAL_FACTORS;
+  return `
+    <div class="elec-section" style="background:linear-gradient(135deg,#eef3fc,#f5f9ff);border-color:#b9d0f0">
+      <h3>${icon('home',16)} Local associatif — quote-part Bilan Carbone ESSEC</h3>
+      <div class="elec-subtitle">Facteurs issus du Bilan Carbone® de l'ESSEC (quote-part électricité/chauffage des locaux associatifs, répartie au m²) : <strong>${essecElecFactor().toFixed(2)} kgCO₂e/m²</strong> (électricité) + <strong>${essecChauffFactor().toFixed(2)} kgCO₂e/m²</strong> (chauffage)</div>
+      <div class="elec-form">
+        <div class="elec-field">
+          <label>Taille du local (m²)</label>
+          <input type="number" class="elec-input" id="essecTaille" min="1" step="0.5" value="${f.tailleDefaut}" oninput="updateEssecLocalPreview()" />
+        </div>
+        <div class="elec-field">
+          <label>Nb d'associations partageant le local</label>
+          <input type="number" class="elec-input" id="essecNbAssos" min="1" step="1" value="${f.nbAssosDefaut}" oninput="updateEssecLocalPreview()" />
+        </div>
+        <div class="elec-field">
+          <label>Répartition attribuée (%)</label>
+          <input type="number" class="elec-input" id="essecRepartition" min="1" max="100" step="1" value="${(f.repartitionDefaut*100).toFixed(0)}" oninput="onEssecRepartitionInput()" data-auto="true" />
+        </div>
+        <div class="elec-field" style="flex-direction:row;align-items:center;gap:6px">
+          <input type="checkbox" id="essecConstruction" checked onchange="updateEssecLocalPreview()" style="width:16px;height:16px" />
+          <label style="text-transform:none;font-weight:600;font-size:12px">Inclure la construction du local (amortie/an)</label>
+        </div>
+        <button class="btn-add" onclick="addEssecLocalItems()">+ Ajouter la quote-part</button>
+      </div>
+      <div id="essecPreview" style="font-size:13px;font-weight:600;color:var(--vert);margin-top:10px"></div>
+      <div class="elec-factor-note">Source : Bilan Carbone® ESSEC — quote-part attribuée aux locaux associatifs (${f.elecTotal.toLocaleString('fr-FR')} kgCO₂e électricité + ${f.chauffTotal.toLocaleString('fr-FR')} kgCO₂e chauffage, réparties sur ${f.surfaceTotale.toLocaleString('fr-FR')} m² de surface totale). Construction : facteur générique ${f.constructionFacteur} kgCO₂e/m², amorti sur ${f.amortissement} ans.</div>
+    </div>
+  `;
+}
+
+function updateEssecLocalPreview() {
+  const taille = parseFloat(document.getElementById('essecTaille')?.value) || 0;
+  const nbAssos = parseFloat(document.getElementById('essecNbAssos')?.value) || 1;
+  const repartitionInput = document.getElementById('essecRepartition');
+  if (repartitionInput && repartitionInput.dataset.auto !== 'false') {
+    repartitionInput.value = (nbAssos > 0 ? (100/nbAssos) : 0).toFixed(0);
+  }
+  const repartition = (parseFloat(repartitionInput?.value) || 0) / 100;
+  const surface = taille * repartition;
+  const includeConstruction = document.getElementById('essecConstruction')?.checked;
+  const elec = surface * essecElecFactor();
+  const chauff = surface * essecChauffFactor();
+  const construction = includeConstruction ? surface * essecConstructionFactorAn() : 0;
+  const total = elec + chauff + construction;
+  const el = document.getElementById('essecPreview');
+  if (el) el.innerHTML = `Surface attribuée : <strong>${surface.toFixed(2)} m²</strong> — Électricité ${formatCO2(elec)} + Chauffage ${formatCO2(chauff)}${includeConstruction ? ' + Construction ' + formatCO2(construction) : ''} = <strong>${formatCO2(total)}</strong>`;
+}
+function onEssecRepartitionInput() {
+  const el = document.getElementById('essecRepartition');
+  if (el) el.dataset.auto = 'false';
+  updateEssecLocalPreview();
+}
+function addEssecLocalItems() {
+  if (!currentEventId) return;
+  const ev = events.find(e => e.id === currentEventId); if (!ev) return;
+  const taille = parseFloat(document.getElementById('essecTaille')?.value) || 0;
+  const repartition = (parseFloat(document.getElementById('essecRepartition')?.value) || 0) / 100;
+  const includeConstruction = document.getElementById('essecConstruction')?.checked;
+  const surface = taille * repartition;
+  if (!surface || surface <= 0) { showToast('Renseignez une surface de local valide'); return; }
+  const elecF = essecElecFactor(), chauffF = essecChauffFactor();
+  ev.items.push({
+    label: 'Électricité du local associatif (quote-part ESSEC)',
+    categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Énergie', rubrique: 'Énergie', rubrique_id: 'energie',
+    unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: elecF, quantite: surface, co2_total: surface * elecF, essec: true
+  });
+  ev.items.push({
+    label: 'Chauffage du local associatif (quote-part ESSEC)',
+    categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Énergie', rubrique: 'Énergie', rubrique_id: 'energie',
+    unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: chauffF, quantite: surface, co2_total: surface * chauffF, essec: true
+  });
+  if (includeConstruction) {
+    const cF = essecConstructionFactorAn();
+    ev.items.push({
+      label: 'Construction du local associatif, amortie sur '+ESSEC_LOCAL_FACTORS.amortissement+' ans (quote-part)',
+      categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Immobilisations', rubrique: 'Énergie', rubrique_id: 'energie',
+      unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: cF, quantite: surface, co2_total: surface * cF, essec: true
+    });
+  }
+  saveEvents(currentEventId);
+  showToast('Quote-part du local ajoutée !', true);
+  renderEventDetail();
+  renderSidebar();
 }
 
 // ===== PÉRIODES SCOLAIRES =====
@@ -1122,6 +1227,7 @@ function renderEventDetail() {
   setTimeout(() => {
     const evCur = events.find(e => e.id === currentEventId);
     if (evCur && evCur.aiRequests) updateAICounter(evCur);
+    if (evCur && evCur.type === 'fonctionnement') updateEssecLocalPreview();
   }, 0);
 }
 
@@ -1153,6 +1259,8 @@ function renderCalculateur(ev, items) {
         <button class="btn-cancel-sel" onclick="cancelSelection()">${icon('x',14)}</button>
       </div>
     </div>
+
+    ${ev.type === 'fonctionnement' ? renderEssecLocalSection() : ''}
 
     <div class="elec-section">
       <h3>${icon('zap',16)} Consommation électrique des appareils</h3>
@@ -1272,7 +1380,7 @@ function renderRapport(ev, items, total, sortedRubrics) {
         ${sorted.map((it,i) => `
           <div class="top-item">
             <div class="top-item-rank">${i+1}</div>
-            <div class="top-item-name">${it.label} ${it.ai?'<span class="pill pill-ai">IA</span>':''}${it.elec?'<span class="pill pill-elec">'+icon('zap',10)+'</span>':''}</div>
+            <div class="top-item-name">${it.label} ${it.ai?'<span class="pill pill-ai">IA</span>':''}${it.elec?'<span class="pill pill-elec">'+icon('zap',10)+'</span>':''}${it.essec?'<span class="pill pill-essec">ESSEC</span>':''}</div>
             <div class="top-item-co2">${formatCO2(it.co2_total)}</div>
             <div class="top-item-pct">${total>0?(it.co2_total/total*100).toFixed(1):0}%</div>
           </div>`).join('')}
@@ -1336,6 +1444,7 @@ function renderListe(ev, items, total) {
             ${rubricIcon(it.rubrique_id, 16)} ${it.label}
             ${it.ai ? '<span class="pill pill-ai">IA</span>' : it.manual ? '<span class="pill pill-manual">Manuel</span>' : ''}
             ${it.elec ? '<span class="pill pill-elec">'+icon('zap',10)+'</span>' : ''}
+            ${it.essec ? '<span class="pill pill-essec">ESSEC</span>' : ''}
             <small>${it.categorie.split(' > ').slice(0,2).join(' › ')}</small>
           </div>
           <div class="item-row-qty">${it.quantite.toLocaleString('fr-FR')}</div>
@@ -2188,7 +2297,7 @@ function exportCSV(evId) {
   const ev = events.find(e => e.id===evId); if(!ev) return;
   const rows = [
     ['Élément','Catégorie','Rubrique','Quantité','Unité','CO2e (kg)','Type'],
-    ...ev.items.map(i => [i.label, i.categorie, i.rubrique, i.quantite, i.input_unit, i.co2_total.toFixed(6), i.ai?'IA':i.elec?'Elec':'ADEME']),
+    ...ev.items.map(i => [i.label, i.categorie, i.rubrique, i.quantite, i.input_unit, i.co2_total.toFixed(6), i.ai?'IA':i.elec?'Elec':i.essec?'ESSEC':'ADEME']),
     ['TOTAL','','','','',totalCO2(ev).toFixed(6),'']
   ];
   const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
