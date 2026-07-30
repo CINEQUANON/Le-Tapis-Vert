@@ -450,6 +450,7 @@ header nav button.active { background: var(--vert); color: white; }
   .event-header-info h1 { font-size: 18px; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -636,7 +637,7 @@ const ICON_PATHS = {
 const RUBRIC_ICON = {
   alimentation: 'utensils', transport: 'car', energie: 'zap', numerique: 'monitor',
   electromenager: 'home', dechets: 'trash', logistique: 'package', papier: 'fileText',
-  mobilier: 'armchair', habillement: 'shirt', autres: 'list', conso_elec: 'zap'
+  mobilier: 'armchair', habillement: 'shirt', autres: 'list', conso_elec: 'zap', hebergement: 'home'
 };
 function icon(name, size) {
   size = size || 16;
@@ -749,19 +750,19 @@ function addEssecLocalItems() {
   const elecF = essecElecFactor(), chauffF = essecChauffFactor();
   ev.items.push({
     label: 'Électricité du local associatif (quote-part ESSEC)',
-    categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Énergie', rubrique: 'Énergie', rubrique_id: 'energie',
+    categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Hébergement / Local', rubrique: 'Hébergement / Local', rubrique_id: 'hebergement',
     unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: elecF, quantite: surface, co2_total: surface * elecF, essec: true
   });
   ev.items.push({
     label: 'Chauffage du local associatif (quote-part ESSEC)',
-    categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Énergie', rubrique: 'Énergie', rubrique_id: 'energie',
+    categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Hébergement / Local', rubrique: 'Hébergement / Local', rubrique_id: 'hebergement',
     unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: chauffF, quantite: surface, co2_total: surface * chauffF, essec: true
   });
   if (includeConstruction) {
     const cF = essecConstructionFactorAn();
     ev.items.push({
       label: 'Construction du local associatif, amortie sur '+ESSEC_LOCAL_FACTORS.amortissement+' ans (quote-part)',
-      categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Immobilisations', rubrique: 'Énergie', rubrique_id: 'energie',
+      categorie: 'Fonctionnement général > Bilan Carbone ESSEC > Hébergement / Local', rubrique: 'Hébergement / Local', rubrique_id: 'hebergement',
       unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: cF, quantite: surface, co2_total: surface * cF, essec: true
     });
   }
@@ -896,7 +897,7 @@ function addHebergementItem() {
   const factorProrata = HEBERGEMENT_FACTOR_M2_AN * nuits / 365;
   ev.items.push({
     label: name + ' (' + nuits + ' nuit' + (nuits > 1 ? 's' : '') + ', ' + surface + ' m²)',
-    categorie: 'Hébergement > Bilan Carbone ESSEC > Énergie', rubrique: 'Énergie', rubrique_id: 'energie',
+    categorie: 'Hébergement > Bilan Carbone ESSEC > Hébergement / Local', rubrique: 'Hébergement / Local', rubrique_id: 'hebergement',
     unite: 'm²CO2e', input_unit: 'm²', co2_par_unite: factorProrata, quantite: surface, co2_total: surface * factorProrata, essec: true
   });
   saveEvents(currentEventId);
@@ -1225,7 +1226,10 @@ function renderBilanAnnuelView() {
     <div class="rapport-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
         <h3 style="margin-bottom:0">${icon('trendingUp',16)} Bilan global ${periode}</h3>
-        <button class="btn-export" onclick="exportBilanCSV('${periode}')">${icon('download',14)} Export CSV</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-export" onclick="exportBilanCSV('${periode}')">${icon('download',14)} Export CSV</button>
+          <button class="btn-export" onclick="exportBilanXLSX('${periode}')" style="background:#1a6b3a">${icon('download',14)} Export Excel (RSE)</button>
+        </div>
       </div>
       <div class="kpi-grid">
         <div class="kpi-box"><div class="kpi-value">${formatCO2(grandTotal)}</div><div class="kpi-label">Total émissions ${periode}</div></div>
@@ -1265,6 +1269,83 @@ function exportBilanCSV(periode) {
   a.href = URL.createObjectURL(new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'}));
   a.download = 'bilan-annuel-'+periode+'.csv';
   a.click(); showToast('Bilan annuel exporté !', true);
+}
+
+function exportBilanXLSX(periode) {
+  if (typeof XLSX === 'undefined') { showToast("La bibliothèque Excel n'a pas pu se charger (vérifiez la connexion internet)"); return; }
+  const evsInPeriod = events.filter(e => (e.periode || currentSchoolYearLabel()) === periode);
+  if (!evsInPeriod.length) { showToast('Aucun événement pour cette période'); return; }
+
+  // --- Feuille 1 : Résumé (matrice rubrique x type d'événement), sur le modèle de l'onglet "Résultats" du fichier Excel RSE ---
+  const typeOrder = EVENT_TYPES.map(t => t.id);
+  const typeLabels = EVENT_TYPES.map(t => t.label);
+  const rubricSet = new Set();
+  evsInPeriod.forEach(ev => (ev.items||[]).forEach(it => rubricSet.add(it.rubrique)));
+  let hasAI = false;
+  evsInPeriod.forEach(ev => { if ((ev.aiRequests||0) > 0) hasAI = true; });
+  if (hasAI) rubricSet.add('Émissions IA');
+  const rubricList = [...rubricSet].sort((a,b) => a.localeCompare(b, 'fr'));
+
+  const matrix = {};
+  rubricList.forEach(r => { matrix[r] = {}; typeOrder.forEach(t => matrix[r][t] = 0); });
+  evsInPeriod.forEach(ev => {
+    const t = ev.type || 'evenement';
+    (ev.items||[]).forEach(it => { matrix[it.rubrique][t] = (matrix[it.rubrique][t]||0) + (it.co2_total||0); });
+    const aiCo2 = (ev.aiRequests||0) * 0.003;
+    if (aiCo2 > 0) matrix['Émissions IA'][t] = (matrix['Émissions IA'][t]||0) + aiCo2;
+  });
+
+  const header1 = ['Rubrique', ...typeLabels, 'TOTAL (kg CO2e)'];
+  const rows1 = rubricList.map(r => {
+    const vals = typeOrder.map(t => Number((matrix[r][t]||0).toFixed(3)));
+    const rowTotal = vals.reduce((s,v) => s+v, 0);
+    return [r, ...vals, Number(rowTotal.toFixed(3))];
+  });
+  const grandTotalXlsx = evsInPeriod.reduce((s,ev) => s+totalCO2(ev), 0);
+  const totalRow = ['TOTAL (kg CO2e)', ...typeOrder.map(t => Number(rubricList.reduce((s,r) => s+(matrix[r][t]||0), 0).toFixed(3))), Number(grandTotalXlsx.toFixed(3))];
+  const ws1Data = [
+    ['Bilan carbone annuel — ' + periode],
+    ['Association ESSEC — export généré le ' + new Date().toLocaleDateString('fr-FR')],
+    [],
+    header1,
+    ...rows1,
+    totalRow
+  ];
+  const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
+  ws1['!cols'] = [{wch:28}, ...typeOrder.map(()=>({wch:16})), {wch:16}];
+
+  // --- Feuille 2 : Détail par événement ---
+  const header2 = ['Type', 'Nom de l\'événement', 'Période', 'Date', 'Participants', 'Nombre de postes', 'Total CO2e (kg)'];
+  const rows2 = evsInPeriod.map(ev => [
+    eventTypeLabel(ev.type), ev.name, ev.periode || '', ev.date || '', ev.participants || '', (ev.items||[]).length, Number(totalCO2(ev).toFixed(3))
+  ]);
+  const ws2 = XLSX.utils.aoa_to_sheet([
+    header2,
+    ...rows2,
+    ['', '', '', '', '', 'TOTAL', Number(grandTotalXlsx.toFixed(3))]
+  ]);
+  ws2['!cols'] = [{wch:16},{wch:26},{wch:12},{wch:12},{wch:12},{wch:14},{wch:16}];
+
+  // --- Feuille 3 : Détail par poste (le plus fin niveau, pour vérif par l'équipe RSE) ---
+  const header3 = ['Type événement', 'Nom événement', 'Période', 'Date', 'Rubrique', 'Poste', 'Quantité', 'Unité', 'CO2e (kg)', 'Source'];
+  const rows3 = [];
+  evsInPeriod.forEach(ev => {
+    (ev.items||[]).forEach(it => {
+      const source = it.ai ? 'IA (estimation)' : it.essec ? 'ESSEC (méthodo interne)' : it.elec ? 'Électricité/chaleur (ADEME + quote-part ESSEC)' : it.manual ? 'Saisie manuelle' : 'Base Carbone ADEME';
+      rows3.push([eventTypeLabel(ev.type), ev.name, ev.periode || '', ev.date || '', it.rubrique, it.label, it.quantite, it.input_unit || '', Number((it.co2_total||0).toFixed(4)), source]);
+    });
+    const aiCo2 = (ev.aiRequests||0) * 0.003;
+    if (aiCo2 > 0) rows3.push([eventTypeLabel(ev.type), ev.name, ev.periode || '', ev.date || '', 'Émissions IA', 'Requêtes IA (' + ev.aiRequests + ')', ev.aiRequests, 'requêtes', Number(aiCo2.toFixed(4)), 'Estimation IA']);
+  });
+  const ws3 = XLSX.utils.aoa_to_sheet([header3, ...rows3]);
+  ws3['!cols'] = [{wch:16},{wch:24},{wch:12},{wch:12},{wch:20},{wch:30},{wch:10},{wch:10},{wch:12},{wch:30}];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws1, 'Résumé');
+  XLSX.utils.book_append_sheet(wb, ws2, 'Détail événements');
+  XLSX.utils.book_append_sheet(wb, ws3, 'Détail postes');
+  XLSX.writeFile(wb, 'bilan-annuel-' + periode + '.xlsx');
+  showToast('Bilan annuel exporté en Excel pour l\'équipe RSE !', true);
 }
 
 // ===== SIDEBAR =====
@@ -1370,37 +1451,170 @@ function renderEventDetail() {
 }
 
 // ===== TAB: CALCULATEUR =====
-function renderCalculateur(ev, items) {
-  const rubrics = getAllRubrics();
+// ===== CARACTÉRISTIQUES (par type d'événement) =====
+const CARAC_FIELDS = {
+  weekend: [
+    { key: 'membres', label: 'Nombre de membres présents', type: 'number', placeholder: 'Ex. : 25' },
+    { key: 'duree', label: 'Durée du week-end (jours)', type: 'number', placeholder: 'Ex. : 2' },
+    { key: 'lieu', label: 'Lieu', type: 'text', placeholder: 'Ex. : Gîte en Normandie' }
+  ],
+  voyage: [
+    { key: 'personnes', label: 'Nombre de personnes', type: 'number', placeholder: 'Ex. : 15' },
+    { key: 'destination', label: 'Destination', type: 'text', placeholder: 'Ex. : Maroc' }
+  ],
+  evenement: [
+    { key: 'participantsEssec', label: 'Nombre de participants ESSEC', type: 'number', placeholder: 'Ex. : 100' },
+    { key: 'participantsHorsEssec', label: 'Nombre de participants hors-ESSEC', type: 'number', placeholder: 'Ex. : 20' },
+    { key: 'intervenants', label: "Nombre d'intervenants", type: 'number', placeholder: 'Ex. : 3' },
+    { key: 'duree', label: "Durée de l'événement (jours)", type: 'number', placeholder: 'Ex. : 1' },
+    { key: 'lieu', label: "Lieu de l'événement", type: 'text', placeholder: 'Ex. : Amphithéâtre ESSEC' }
+  ]
+};
+function renderCaracteristiquesSection(ev) {
+  const fields = CARAC_FIELDS[ev.type];
+  if (!fields || !fields.length) return '';
+  const carac = ev.carac || {};
   return `
     <div class="add-section">
-      <h3>${icon('search',16)} Recherche Base Carbone ADEME</h3>
-      <div class="cat-pills">
-        <button class="cat-pill active" onclick="filterCat('')" data-cat="">Tout</button>
-        ${rubrics.map(r => `<button class="cat-pill" onclick="filterCat('${r.id}')" data-cat="${r.id}">${rubricIcon(r.id,12)} ${r.label}</button>`).join('')}
-      </div>
-      <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un aliment, véhicule, appareil…" oninput="onSearch(this.value)" onfocus="onSearchFocus()" />
-      <div class="results-list" id="resultsList"></div>
-      <div class="selected-item-row" id="selectedRow">
-        <div class="selected-item-info">
-          <div class="selected-item-name" id="selectedName"></div>
-          <div class="selected-item-cat" id="selectedCat"></div>
-          <div style="font-size:10px;color:var(--gris);margin-top:3px" id="selectedFactor"></div>
-        </div>
-        <div class="quantity-group">
-          <label class="quantity-label" id="qtyLabel">Quantité</label>
-          <input type="number" class="qty-input" id="qtyInput" value="1" min="0.001" step="0.1" oninput="updatePreview()" />
-          <span style="font-size:11px;color:var(--gris)" id="qtyUnit"></span>
-          <div class="co2-preview" id="co2Preview">0 kgCO₂e</div>
-        </div>
-        <button class="btn-add" onclick="addItemToEvent()">+ Ajouter</button>
-        <button class="btn-cancel-sel" onclick="cancelSelection()">${icon('x',14)}</button>
+      <h3>${icon('list',16)} Caractéristiques</h3>
+      <div class="manual-form">
+        ${fields.map(f => `
+          <div class="manual-field">
+            <label>${f.label}</label>
+            <input type="${f.type}" class="manual-input" id="carac_${f.key}" placeholder="${f.placeholder}" value="${carac[f.key] != null ? carac[f.key] : ''}" onchange="updateCarac('${f.key}', this.value)" style="${f.type==='text'?'width:220px':'width:140px'}" />
+          </div>`).join('')}
       </div>
     </div>
+  `;
+}
+function updateCarac(key, value) {
+  const ev = events.find(e => e.id === currentEventId);
+  if (!ev) return;
+  if (!ev.carac) ev.carac = {};
+  ev.carac[key] = value;
+  saveEvents(ev.id);
+}
 
-    ${ev.type === 'fonctionnement' ? renderEssecLocalSection() : ''}
-    ${ev.type === 'fonctionnement' ? renderEssecApplianceSection() : ''}
+// ===== NUMÉRIQUE — EMAILS (fonctionnement général) =====
+// Facteur ADEME "numérique responsable" — absent du fichier CSV Base Carbone standard,
+// repris du fichier Bilan Carbone ESSEC (exception au même titre que l'hébergement).
+const EMAIL_FACTOR = 0.035; // kgCO2e / mail avec pièce jointe
+function renderNumeriqueSection() {
+  return `
+    <div class="elec-section" style="background:linear-gradient(135deg,#eef3fc,#f5f9ff);border-color:#b9d0f0">
+      <h3>${icon('monitor',16)} Numérique — emails</h3>
+      <div class="elec-subtitle">Facteur ADEME (usages numériques) : <strong>${EMAIL_FACTOR} kgCO₂e / mail avec pièce jointe</strong></div>
+      <div class="elec-form">
+        <div class="elec-field">
+          <label>Nombre de mails avec pièce jointe (sur l'année)</label>
+          <input type="number" class="elec-input" id="emailCount" min="1" step="1" placeholder="Ex. : 500" oninput="updateEmailPreview()" />
+        </div>
+        <div class="elec-preview" id="emailPreview">—</div>
+        <button class="btn-add" onclick="addEmailItem()">+ Ajouter</button>
+      </div>
+      <div class="elec-factor-note">Source : facteur ADEME "numérique responsable", repris du fichier Bilan Carbone ESSEC (absent du fichier Base Carbone standard).</div>
+    </div>
+  `;
+}
+function updateEmailPreview() {
+  const n = parseFloat(document.getElementById('emailCount')?.value) || 0;
+  const el = document.getElementById('emailPreview');
+  if (el) el.textContent = n > 0 ? formatCO2(n * EMAIL_FACTOR) : '—';
+}
+function addEmailItem() {
+  if (!currentEventId) return;
+  const n = parseFloat(document.getElementById('emailCount')?.value);
+  if (!n || n <= 0) { showToast('Nombre de mails invalide'); return; }
+  const ev = events.find(e => e.id === currentEventId); if (!ev) return;
+  ev.items.push({
+    label: 'Emails avec pièce jointe', categorie: 'Fonctionnement général > Numérique', rubrique: 'Numérique', rubrique_id: 'numerique',
+    unite: 'nombreCO2e', input_unit: 'mail', co2_par_unite: EMAIL_FACTOR, quantite: n, co2_total: n * EMAIL_FACTOR, essec: true
+  });
+  saveEvents(currentEventId);
+  showToast('Emails ajoutés !', true);
+  document.getElementById('emailCount').value = '';
+  document.getElementById('emailPreview').textContent = '—';
+  renderEventDetail();
+  renderSidebar();
+}
 
+// ===== HÉBERGEMENT (COÛT) — voyages & événements =====
+// Contrairement au week-end/fonctionnement général (facteur ESSEC au m²), les voyages et
+// événements utilisent, comme dans le fichier Excel, un facteur monétaire ADEME
+// "Services d'hébergement et de restauration" (Achats de services > Ratios monétaires).
+function getHebergementCoutFactors() {
+  return DB.filter(d => d.label.startsWith("Services d'hébergement et de restauration")).sort((a,b) => b.label.localeCompare(a.label));
+}
+function renderHebergementCoutSection() {
+  const factors = getHebergementCoutFactors();
+  const opts = factors.map((f,i) => `<option value="${i}">${f.label} (${f.co2_par_unite} kgCO₂e/k€)</option>`).join('');
+  return `
+    <div class="elec-section">
+      <h3>${icon('home',16)} Hébergement (frais engagés)</h3>
+      <div class="elec-subtitle">Facteur ADEME dépense monétaire — Base Carbone, ratio "Services d'hébergement et de restauration".</div>
+      <div class="elec-form">
+        <div class="elec-field">
+          <label>Année du facteur</label>
+          <select class="elec-input" id="hebCoutFactor" style="width:240px" onchange="updateHebergementCoutPreview()">${opts}</select>
+        </div>
+        <div class="elec-field">
+          <label>Coût par nuit et par personne (k€)</label>
+          <input type="number" class="elec-input" id="hebCoutRate" min="0" step="0.01" placeholder="k€" oninput="updateHebergementCoutPreview()" />
+        </div>
+        <div class="elec-field">
+          <label>Nombre de nuitées</label>
+          <input type="number" class="elec-input" id="hebCoutNuitees" min="1" step="1" value="1" oninput="updateHebergementCoutPreview()" />
+        </div>
+        <div class="elec-field">
+          <label>Nombre de personnes logées</label>
+          <input type="number" class="elec-input" id="hebCoutPersonnes" min="1" step="1" value="1" oninput="updateHebergementCoutPreview()" />
+        </div>
+        <div class="elec-preview" id="hebCoutPreview">—</div>
+        <button class="btn-add" onclick="addHebergementCoutItem()">+ Ajouter</button>
+      </div>
+      <div class="elec-factor-note">Astuce : si vous connaissez seulement le coût total, indiquez-le dans "Coût par nuit et par personne" et laissez nuitées/personnes à 1.</div>
+    </div>
+  `;
+}
+function updateHebergementCoutPreview() {
+  const factors = getHebergementCoutFactors();
+  const idx = parseInt(document.getElementById('hebCoutFactor')?.value, 10);
+  const f = factors[idx];
+  const rate = parseFloat(document.getElementById('hebCoutRate')?.value) || 0;
+  const nuitees = parseFloat(document.getElementById('hebCoutNuitees')?.value) || 0;
+  const personnes = parseFloat(document.getElementById('hebCoutPersonnes')?.value) || 0;
+  const el = document.getElementById('hebCoutPreview');
+  if (!el || !f) return;
+  const totalKeuro = rate * nuitees * personnes;
+  el.textContent = totalKeuro > 0 ? formatCO2(totalKeuro * f.co2_par_unite) : '—';
+}
+function addHebergementCoutItem() {
+  if (!currentEventId) return;
+  const factors = getHebergementCoutFactors();
+  const idx = parseInt(document.getElementById('hebCoutFactor')?.value, 10);
+  const f = factors[idx];
+  const rate = parseFloat(document.getElementById('hebCoutRate')?.value);
+  const nuitees = parseFloat(document.getElementById('hebCoutNuitees')?.value) || 1;
+  const personnes = parseFloat(document.getElementById('hebCoutPersonnes')?.value) || 1;
+  if (!f || !rate || rate <= 0) { showToast('Renseignez un coût valide'); return; }
+  const ev = events.find(e => e.id === currentEventId); if (!ev) return;
+  const totalKeuro = rate * nuitees * personnes;
+  ev.items.push({
+    label: 'Hébergement (' + nuitees + ' nuit' + (nuitees > 1 ? 's' : '') + ', ' + personnes + ' pers.)',
+    categorie: 'Hébergement > ' + f.categorie, rubrique: 'Hébergement / Local', rubrique_id: 'hebergement',
+    unite: 'k€CO2e', input_unit: 'k€', co2_par_unite: f.co2_par_unite, quantite: totalKeuro, co2_total: totalKeuro * f.co2_par_unite
+  });
+  saveEvents(currentEventId);
+  showToast('Hébergement ajouté !', true);
+  document.getElementById('hebCoutRate').value = '';
+  document.getElementById('hebCoutPreview').textContent = '—';
+  renderEventDetail();
+  renderSidebar();
+}
+
+// ===== SECTIONS COMMUNES (électroménager libre, IA, saisie manuelle) =====
+function renderElecSection() {
+  return `
     <div class="elec-section">
       <h3>${icon('zap',16)} Consommation électrique des appareils</h3>
       <div class="elec-subtitle">Facteur mix électrique français 2025 (ADEME) : <strong>0,0461 kgCO₂e/kWh</strong></div>
@@ -1418,9 +1632,10 @@ function renderCalculateur(ev, items) {
       </div>
       <div class="elec-factor-note">Source : Base Carbone® ADEME — Électricité / 2025 - mix moyen France</div>
     </div>
-
-    ${renderHebergementSection()}
-
+  `;
+}
+function renderAISection() {
+  return `
     <div class="ai-section">
       <h3>${icon('bot',16)} Estimation IA <span style="font-size:11px;font-weight:400;color:var(--gris)">— pour les éléments absents de la base ADEME</span></h3>
       <div class="ai-subtitle">Décrivez un aliment, un produit ou une activité non trouvé(e) dans la base. Vous serez redirigé(e) vers Claude avec la question pré-remplie.</div>
@@ -1435,7 +1650,10 @@ function renderCalculateur(ev, items) {
       </div>
       <div class="ai-result" id="aiResult"></div>
     </div>
-
+  `;
+}
+function renderManualSection() {
+  return `
     <div class="manual-section">
       <h3>${icon('pencil',16)} Saisie manuelle d'un poste</h3>
       <div class="manual-subtitle">Entrez directement un nom et la quantité de CO₂e connue (issue d'une estimation IA, d'une autre base, ou d'un calcul propre).</div>
@@ -1451,6 +1669,7 @@ function renderCalculateur(ev, items) {
             <option value="alimentation|Alimentation">Alimentation</option>
             <option value="transport|Transport">Transport</option>
             <option value="energie|Énergie">Énergie</option>
+            <option value="hebergement|Hébergement / Local">Hébergement / Local</option>
             <option value="numerique|Numérique">Numérique</option>
             <option value="electromenager|Électroménager">Électroménager</option>
             <option value="dechets|Déchets">Déchets</option>
@@ -1465,6 +1684,43 @@ function renderCalculateur(ev, items) {
       </div>
     </div>
   `;
+}
+
+// ===== TAB: CALCULATEUR (affichage guidé par rubrique, selon le type d'événement) =====
+function renderCalculateur(ev, items) {
+  const type = ev.type || 'evenement';
+  let sections = renderCaracteristiquesSection(ev);
+
+  if (type === 'weekend') {
+    sections += renderScopedSearchSection('deplacements', 'Déplacements', 'Recherche ADEME limitée aux rubriques Transport et Logistique.', 'Rechercher un moyen de transport…', false, 'car');
+    sections += renderScopedSearchSection('nourriture', 'Nourriture', "Plats et boissons — recherche ADEME limitée à l'alimentation.", 'Rechercher un aliment ou une boisson…', false, 'utensils');
+    sections += renderHebergementSection();
+  } else if (type === 'soiree') {
+    sections += renderScopedSearchSection('boissons', 'Boissons', "Recherche ADEME limitée à l'alimentation.", 'Rechercher une boisson…', false, 'utensils');
+    sections += renderScopedSearchSection('nourriture', 'Nourriture', "Recherche ADEME limitée à l'alimentation.", 'Rechercher un aliment, un plat…', false, 'utensils');
+  } else if (type === 'fonctionnement') {
+    sections += renderEssecLocalSection();
+    sections += renderEssecApplianceSection();
+    sections += renderScopedSearchSection('textile', "Achats — Textile d'association", "Recherche ADEME limitée à l'habillement (sweats, t-shirts, vestes…).", 'Rechercher un vêtement…', false, 'shirt');
+    sections += renderNumeriqueSection();
+  } else if (type === 'voyage') {
+    sections += renderScopedSearchSection('deplacements', 'Déplacements', 'Recherche ADEME limitée aux rubriques Transport et Logistique.', 'Rechercher un moyen de transport…', false, 'car');
+    sections += renderScopedSearchSection('nourriture', 'Nourriture', "Recherche ADEME limitée à l'alimentation.", 'Rechercher un aliment, un plat…', false, 'utensils');
+    sections += renderHebergementCoutSection();
+  } else {
+    sections += renderScopedSearchSection('materiel', 'Matériel', 'Communication, décoration, textile, goodies… recherche ADEME limitée au matériel.', 'Rechercher un objet, un équipement…', false, 'package');
+    sections += renderScopedSearchSection('deplacements', 'Déplacements', 'Recherche ADEME limitée aux rubriques Transport et Logistique.', 'Rechercher un moyen de transport…', false, 'car');
+    sections += renderScopedSearchSection('nourriture', 'Nourriture', "Recherche ADEME limitée à l'alimentation.", 'Rechercher un aliment, un plat…', false, 'utensils');
+    sections += renderHebergementCoutSection();
+    sections += renderScopedSearchSection('dechets', 'Déchets', 'Recherche ADEME limitée aux déchets.', 'Rechercher un type de déchet…', false, 'trash');
+  }
+
+  sections += renderScopedSearchSection('main', 'Autres — recherche libre', 'Pour tout ce qui ne rentre pas dans les rubriques ci-dessus : recherche dans toute la Base Carbone ADEME, avec filtres par rubrique.', 'Rechercher un aliment, véhicule, appareil…', true, 'search');
+  sections += renderElecSection();
+  sections += renderAISection();
+  sections += renderManualSection();
+
+  return sections;
 }
 
 // ===== TAB: RAPPORT =====
@@ -1609,31 +1865,89 @@ function getAllRubrics() {
   return Object.entries(seen).map(([id,label]) => ({id,label})).sort((a,b) => a.label.localeCompare(b.label));
 }
 
-function filterCat(catId) {
-  currentCat = catId;
-  document.querySelectorAll('.cat-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === catId));
-  const q = document.getElementById('searchInput')?.value || '';
-  performSearch(q);
+// ===== RECHERCHE ADEME SCOPÉE PAR RUBRIQUE =====
+// Remplace l'ancienne recherche unique globale par des widgets indépendants,
+// chacun pouvant être restreint à une liste de rubrique_id (ex: Déplacements -> transport/logistique
+// uniquement). sectionId='main' = recherche libre non filtrée (fourre-tout "Autres").
+const SEARCH_SECTIONS = {
+  main: null,
+  deplacements: ['transport','logistique'],
+  nourriture: ['alimentation'],
+  boissons: ['alimentation'],
+  materiel: ['electromenager','numerique','mobilier','habillement','autres','papier'],
+  textile: ['habillement'],
+  dechets: ['dechets']
+};
+let searchWidgetState = {};
+function ensureSearchState(sectionId) {
+  if (!searchWidgetState[sectionId]) searchWidgetState[sectionId] = { selectedItem: null, currentCat: '', searchTimeout: null };
+  return searchWidgetState[sectionId];
 }
-
-// ===== SEARCH =====
-function onSearch(val) { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => performSearch(val), 150); }
-function onSearchFocus() { const q = document.getElementById('searchInput')?.value||''; if(q.length>=1||currentCat) performSearch(q); }
-
-function performSearch(q) {
-  const list = document.getElementById('resultsList');
+function renderScopedSearchSection(sectionId, title, subtitle, placeholder, showCatPills, iconName) {
+  ensureSearchState(sectionId);
+  const rubrics = showCatPills ? getAllRubrics() : [];
+  return `
+    <div class="add-section" id="wrap_${sectionId}">
+      <h3>${icon(iconName||'search',16)} ${title}</h3>
+      ${subtitle ? `<div style="font-size:11px;color:var(--gris);margin-bottom:10px">${subtitle}</div>` : ''}
+      ${showCatPills ? `<div class="cat-pills">
+        <button class="cat-pill active" onclick="filterCatScoped('${sectionId}','')" data-cat="">Tout</button>
+        ${rubrics.map(r => `<button class="cat-pill" onclick="filterCatScoped('${sectionId}','${r.id}')" data-cat="${r.id}">${rubricIcon(r.id,12)} ${r.label}</button>`).join('')}
+      </div>` : ''}
+      <input type="text" class="search-input" id="search_${sectionId}" placeholder="${placeholder}" oninput="onSearchScoped('${sectionId}', this.value)" onfocus="onSearchFocusScoped('${sectionId}')" />
+      <div class="results-list" id="results_${sectionId}"></div>
+      <div class="selected-item-row" id="selectedRow_${sectionId}">
+        <div class="selected-item-info">
+          <div class="selected-item-name" id="selectedName_${sectionId}"></div>
+          <div class="selected-item-cat" id="selectedCat_${sectionId}"></div>
+          <div style="font-size:10px;color:var(--gris);margin-top:3px" id="selectedFactor_${sectionId}"></div>
+        </div>
+        <div class="quantity-group">
+          <label class="quantity-label" id="qtyLabel_${sectionId}">Quantité</label>
+          <input type="number" class="qty-input" id="qtyInput_${sectionId}" value="1" min="0.001" step="0.1" oninput="updatePreviewScoped('${sectionId}')" onkeydown="if(event.key==='Enter')addItemToEventScoped('${sectionId}')" />
+          <span style="font-size:11px;color:var(--gris)" id="qtyUnit_${sectionId}"></span>
+          <div class="co2-preview" id="co2Preview_${sectionId}">0 kgCO₂e</div>
+        </div>
+        <button class="btn-add" onclick="addItemToEventScoped('${sectionId}')">+ Ajouter</button>
+        <button class="btn-cancel-sel" onclick="cancelSelectionScoped('${sectionId}')">${icon('x',14)}</button>
+      </div>
+    </div>
+  `;
+}
+function onSearchScoped(sectionId, val) {
+  const st = ensureSearchState(sectionId);
+  clearTimeout(st.searchTimeout);
+  st.searchTimeout = setTimeout(() => performSearchScoped(sectionId), 150);
+}
+function onSearchFocusScoped(sectionId) {
+  const st = ensureSearchState(sectionId);
+  const q = document.getElementById('search_'+sectionId)?.value || '';
+  if (q.length >= 1 || st.currentCat) performSearchScoped(sectionId);
+}
+function filterCatScoped(sectionId, catId) {
+  const st = ensureSearchState(sectionId);
+  st.currentCat = catId;
+  document.querySelectorAll('#wrap_'+sectionId+' .cat-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === catId));
+  performSearchScoped(sectionId);
+}
+function performSearchScoped(sectionId) {
+  const st = ensureSearchState(sectionId);
+  const allowed = SEARCH_SECTIONS[sectionId];
+  const list = document.getElementById('results_'+sectionId);
   if (!list) return;
-  const query = q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const qRaw = document.getElementById('search_'+sectionId)?.value || '';
+  const query = qRaw.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
   let results = DB;
-  if (currentCat) results = results.filter(i => i.rubrique_id === currentCat);
-  if (query.length >= 1) results = results.filter(i => (i.label+' '+i.tags+' '+i.categorie).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(query));
-  if (!currentCat && query.length < 1) { list.classList.remove('visible'); return; }
+  if (allowed) results = results.filter(i => allowed.includes(i.rubrique_id));
+  if (st.currentCat) results = results.filter(i => i.rubrique_id === st.currentCat);
+  if (query.length >= 1) results = results.filter(i => (i.label+' '+i.tags+' '+i.categorie).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(query));
+  if (query.length < 1 && !st.currentCat) { list.classList.remove('visible'); return; }
   results = results.slice(0, 80);
   list.classList.add('visible');
-  if (!results.length) { list.innerHTML = '<div class="no-results">Aucun résultat — essayez l\'estimation IA</div>'; return; }
+  if (!results.length) { list.innerHTML = '<div class="no-results">Aucun résultat — essayez la recherche libre "Autres" ou la saisie manuelle plus bas</div>'; return; }
   list.innerHTML = results.map((item) => {
     const f = item.co2_par_unite;
-    return `<div class="result-item" onclick="selectItem(${DB.indexOf(item)})">
+    return `<div class="result-item" onclick="selectItemScoped('${sectionId}', ${DB.indexOf(item)})">
       <div style="font-size:16px">${rubricIcon(item.rubrique_id, 18)}</div>
       <div class="result-item-info">
         <div class="result-item-name">${item.label}</div>
@@ -1646,48 +1960,52 @@ function performSearch(q) {
     </div>`;
   }).join('');
 }
-
-function selectItem(idx) {
-  selectedItem = DB[idx];
-  document.getElementById('resultsList').classList.remove('visible');
-  document.getElementById('searchInput').value = selectedItem.label;
-  document.getElementById('selectedName').textContent = selectedItem.label;
-  document.getElementById('selectedCat').textContent = selectedItem.categorie.split(' > ').slice(0,2).join(' › ');
-  document.getElementById('selectedFactor').textContent = 'Facteur : '+selectedItem.co2_par_unite+' kgCO₂e/'+selectedItem.input_unit;
-  document.getElementById('qtyLabel').textContent = selectedItem.input_label;
-  document.getElementById('qtyUnit').textContent = selectedItem.input_unit;
-  document.getElementById('qtyInput').value = '1';
-  document.getElementById('selectedRow').classList.add('visible');
-  updatePreview();
-  document.getElementById('qtyInput').focus();
+function selectItemScoped(sectionId, idx) {
+  const st = ensureSearchState(sectionId);
+  st.selectedItem = DB[idx];
+  document.getElementById('results_'+sectionId).classList.remove('visible');
+  document.getElementById('search_'+sectionId).value = st.selectedItem.label;
+  document.getElementById('selectedName_'+sectionId).textContent = st.selectedItem.label;
+  document.getElementById('selectedCat_'+sectionId).textContent = st.selectedItem.categorie.split(' > ').slice(0,2).join(' › ');
+  document.getElementById('selectedFactor_'+sectionId).textContent = 'Facteur : '+st.selectedItem.co2_par_unite+' kgCO₂e/'+st.selectedItem.input_unit;
+  document.getElementById('qtyLabel_'+sectionId).textContent = st.selectedItem.input_label;
+  document.getElementById('qtyUnit_'+sectionId).textContent = st.selectedItem.input_unit;
+  document.getElementById('qtyInput_'+sectionId).value = '1';
+  document.getElementById('selectedRow_'+sectionId).classList.add('visible');
+  updatePreviewScoped(sectionId);
+  document.getElementById('qtyInput_'+sectionId).focus();
 }
-
-function updatePreview() {
-  if (!selectedItem) return;
-  const qty = parseFloat(document.getElementById('qtyInput').value)||0;
-  document.getElementById('co2Preview').textContent = formatCO2(qty*selectedItem.co2_par_unite);
+function updatePreviewScoped(sectionId) {
+  const st = ensureSearchState(sectionId);
+  if (!st.selectedItem) return;
+  const qty = parseFloat(document.getElementById('qtyInput_'+sectionId)?.value) || 0;
+  const el = document.getElementById('co2Preview_'+sectionId);
+  if (el) el.textContent = formatCO2(qty * st.selectedItem.co2_par_unite);
 }
-
-function cancelSelection() {
-  selectedItem = null;
-  const r = document.getElementById('selectedRow'); if(r) r.classList.remove('visible');
-  const s = document.getElementById('searchInput'); if(s) s.value='';
-  const l = document.getElementById('resultsList'); if(l) l.classList.remove('visible');
+function cancelSelectionScoped(sectionId) {
+  const st = ensureSearchState(sectionId);
+  st.selectedItem = null;
+  const r = document.getElementById('selectedRow_'+sectionId); if (r) r.classList.remove('visible');
+  const s = document.getElementById('search_'+sectionId); if (s) s.value = '';
+  const l = document.getElementById('results_'+sectionId); if (l) l.classList.remove('visible');
 }
-
-// ===== ADD ITEM =====
-function addItemToEvent() {
-  if (!selectedItem || !currentEventId) return;
-  const qty = parseFloat(document.getElementById('qtyInput').value);
-  if (!qty||qty<=0) { showToast("Quantité invalide"); return; }
-  const ev = events.find(e => e.id===currentEventId);
+function addItemToEventScoped(sectionId) {
+  const st = ensureSearchState(sectionId);
+  if (!st.selectedItem || !currentEventId) return;
+  const qty = parseFloat(document.getElementById('qtyInput_'+sectionId)?.value);
+  if (!qty || qty <= 0) { showToast('Quantité invalide'); return; }
+  const ev = events.find(e => e.id === currentEventId);
   if (!ev) return;
   ev.items.push({
-    label: selectedItem.label, categorie: selectedItem.categorie, rubrique: selectedItem.rubrique,
-    rubrique_id: selectedItem.rubrique_id, unite: selectedItem.unite, input_unit: selectedItem.input_unit,
-    co2_par_unite: selectedItem.co2_par_unite, quantite: qty, co2_total: qty*selectedItem.co2_par_unite
+    label: st.selectedItem.label, categorie: st.selectedItem.categorie, rubrique: st.selectedItem.rubrique,
+    rubrique_id: st.selectedItem.rubrique_id, unite: st.selectedItem.unite, input_unit: st.selectedItem.input_unit,
+    co2_par_unite: st.selectedItem.co2_par_unite, quantite: qty, co2_total: qty * st.selectedItem.co2_par_unite
   });
-  saveEvents(currentEventId); showToast(selectedItem.label+' ajouté !', true); cancelSelection(); renderEventDetail(); renderSidebar();
+  saveEvents(currentEventId);
+  showToast(st.selectedItem.label + ' ajouté !', true);
+  cancelSelectionScoped(sectionId);
+  renderEventDetail();
+  renderSidebar();
 }
 
 function removeItem(evId, idx) {
@@ -2536,10 +2854,12 @@ async function enterApp() {
 
 // ===== INIT =====
 document.addEventListener('keydown', e => {
-  if (e.key==='Escape') { closeModal(); closePrivacyModal(); cancelSelection(); const l=document.getElementById('resultsList'); if(l) l.classList.remove('visible'); }
+  if (e.key==='Escape') {
+    closeModal(); closePrivacyModal();
+    Object.keys(searchWidgetState).forEach(sid => cancelSelectionScoped(sid));
+  }
   if (e.key==='Enter') {
     if (document.getElementById('authScreen').classList.contains('visible')) { submitAuth(); return; }
-    if (!document.getElementById('eventModal').classList.contains('visible') && selectedItem) addItemToEvent();
   }
 });
 
