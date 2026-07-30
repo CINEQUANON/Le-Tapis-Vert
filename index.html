@@ -491,7 +491,6 @@ header nav button.active { background: var(--vert); color: white; }
 <header>
   <div class="logo">Le Tapis <span>Vert</span></div>
   <span class="ademe-badge">Base Carbone ADEME</span>
-  <span class="ademe-badge" style="background:#eef3fc;color:#2a5aa0;border-color:#b9d0f0" title="Version du calculateur — vérifiez que ce numéro correspond bien au fichier reçu en cas de doute">v3 · rubriques par type</span>
   <img src="CQNB.png" alt="Logo CQN" class="CQN-logo" position="absolute" top="100px" right="100px" width="80px" height="50px"/>
   <nav>
     <button class="active" id="navEvents" onclick="showView('events')">Mes événements</button>
@@ -2595,7 +2594,7 @@ async function handleUnpublish() {
 function renderAbout() {
   return `<div style="max-width:600px;margin:0 auto"><div style="background:white;border-radius:8px;padding:28px;border:1px solid var(--bordure)">
     <h1 style="font-size:20px;font-weight:800;margin-bottom:14px">À propos du Tapis Vert</h1>
-    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Le Tapis Vert est un calculateur carbone développé par l'association <a href="https://www.instagram.com/cinequanonessec/" target="_blank" style="color:var(--bleu)">CINEQUANON</a>, à destination des associations et autres petites organisations soucieuses d'évaluer l'impact de leurs activités. Il utilise la <strong>Base Carbone® officielle de l'ADEME</strong> pour calculer l'empreinte carbone de vos événements.</p>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Le Tapis Vert est un calculateur carbone développé par Johan Rigolé, responsable RSO de l'association <a href="https://www.instagram.com/cinequanonessec/" target="_blank" style="color:var(--bleu)">CINEQUANON</a>de 2025 à 2027, à destination des associations et autres petites organisations soucieuses d'évaluer l'impact de leurs activités. Il utilise la <strong>Base Carbone® officielle de l'ADEME</strong> pour calculer l'empreinte carbone de vos événements.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Les facteurs d'émission sont exprimés en <strong>kgCO₂ équivalent</strong> et couvrent l'ensemble des gaz à effet de serre.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">La fonction <strong>Estimation IA</strong> utilise Claude (Anthropic) pour estimer les facteurs manquants — les émissions liées à chaque requête (~0,003 kgCO₂e) sont automatiquement ajoutées au bilan.</p>
     <p style="font-size:14px;line-height:1.7;margin-bottom:10px">Attention, ce calculateur ne permet pas d'atteindre le niveau de précision requis par la méthodologie Bilan Carbone®. Pour en savoir plus sur la méthodologie Bilan Carbone®, consultez le site <br><a href="https://www.bilancarbone-methode.com/avant-propos/historique-et-suivi-des-modifications" target="_blank" style="color:var(--vert)">Bilan Carbone® 2025</a></p>
