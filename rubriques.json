@@ -1,0 +1,2626 @@
+{
+ "_aide": "Fichier de calibrage du script update_ademe.py. Les règles 'niveau_1/2/3' disent dans quelle rubrique du calculateur classer un facteur selon le début de sa catégorie ADEME et son unité. Généré à partir de la base intégrée initiale ; modifiable à la main (le script ne l'écrase jamais).",
+ "colonnes_csv": {
+  "nom_base": "Nom base français",
+  "nom_attribut": "Nom attribut français",
+  "nom_frontiere": "Nom frontière français",
+  "type_ligne": "Type Ligne",
+  "statut": "Statut de l'élément",
+  "categorie": "Code de la catégorie",
+  "valeur": "Total poste non décomposé",
+  "unite": "Unité français",
+  "tags": "Tags français"
+ },
+ "type_ligne_accepte": [
+  "Elément"
+ ],
+ "statuts_acceptes": [
+  "Valide générique"
+ ],
+ "categorie_niveaux_a_retirer": 1,
+ "unites_ademe_vers_saisie": {
+  "kWh": "kWh",
+  "kWh PCI": "kWh",
+  "kWh PCS": "kWh",
+  "kg": "kg",
+  "tonne": "tonne",
+  "t": "tonne",
+  "GJ": "GJ",
+  "unité": "unité",
+  "m": "m",
+  "m²": "m²",
+  "m³": "m³",
+  "m3": "m³",
+  "km": "km",
+  "tonne.km": "t.km",
+  "t.km": "t.km",
+  "EVP.km": "EVP.km",
+  "m³.km": "m³.km",
+  "m3.km": "m³.km",
+  "k€": "k€",
+  "heure": "heure",
+  "h": "heure",
+  "livre": "livre",
+  "L": "L",
+  "MJ": "MJ",
+  "100 feuilles": "100 feuilles",
+  "mL": "mL",
+  "€": "€"
+ },
+ "seuil_alerte_variation_pct": 20,
+ "regles": {
+  "1": {
+   "Produits agro-alimentaires, plats préparés et boissons || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Plastiques et produits chimiques || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques || kg": [
+    "autres",
+    "Autres",
+    "Quantité (kg)"
+   ],
+   "Ratios monétaires || k€": [
+    "autres",
+    "Autres",
+    "Montant (k€)"
+   ],
+   "Fossiles || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Machines et équipements || kg": [
+    "electromenager",
+    "Électroménager",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements || unité": [
+    "electromenager",
+    "Électroménager",
+    "Nombre d'unités"
+   ],
+   "Mobilier || unité": [
+    "mobilier",
+    "Mobilier",
+    "Nombre d'unités"
+   ],
+   "Routier || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Routier || m³.km": [
+    "logistique",
+    "Logistique",
+    "Volume × km (m³.km)"
+   ],
+   "Routier || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Aérien || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Autres produits manufacturés || unité": [
+    "autres",
+    "Autres",
+    "Nombre d'unités"
+   ],
+   "Produits de l'agriculture et de la pêche || unité": [
+    "alimentation",
+    "Alimentation",
+    "Nombre d'unités"
+   ],
+   "Fluvial || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Organiques || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Organiques || L": [
+    "energie",
+    "Combustibles",
+    "Volume (L)"
+   ],
+   "Organiques || MJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (MJ)"
+   ],
+   "Organiques || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Machines et équipements || m": [
+    "electromenager",
+    "Électroménager",
+    "Longueur (m)"
+   ],
+   "Maritime || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Papier, carton || tonne": [
+    "papier",
+    "Papier",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés || 100 feuilles": [
+    "autres",
+    "Autres",
+    "Quantité (100 feuilles A4)"
+   ],
+   "Textile et habillement || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Machines et équipements || m²": [
+    "numerique",
+    "Numérique",
+    "Surface (m²)"
+   ],
+   "Fossiles || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés || €": [
+    "autres",
+    "Autres",
+    "Montant (€)"
+   ],
+   "Activités Economiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Mix réseau électrique || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Moyen de production || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Autres produits manufacturés || mL": [
+    "autres",
+    "Autres",
+    "Volume (mL)"
+   ],
+   "Textile et habillement || kg": [
+    "habillement",
+    "Habillement",
+    "Quantité (kg)"
+   ],
+   "Fossiles || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Fossiles || m³": [
+    "energie",
+    "Combustibles",
+    "Volume (m³)"
+   ],
+   "Autres produits manufacturés || m²": [
+    "autres",
+    "Autres",
+    "Surface (m²)"
+   ],
+   "Routier || heure": [
+    "transport",
+    "Transport",
+    "Durée (heures)"
+   ],
+   "Organiques || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Ferroviaire || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Papier, carton || livre": [
+    "papier",
+    "Papier",
+    "Quantité (livres)"
+   ],
+   "Mobilier || tonne": [
+    "mobilier",
+    "Mobilier",
+    "Quantité (tonnes)"
+   ],
+   "Machines et équipements || k€": [
+    "numerique",
+    "Numérique",
+    "Montant (k€)"
+   ],
+   "Fluvial || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Maritime || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Papier, carton || kg": [
+    "papier",
+    "Papier",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés || L": [
+    "autres",
+    "Autres",
+    "Volume (L)"
+   ],
+   "Maritime || EVP.km": [
+    "logistique",
+    "Logistique",
+    "Conteneurs (EVP) × km"
+   ],
+   "Papier, carton || unité": [
+    "papier",
+    "Papier",
+    "Nombre d'unités"
+   ],
+   "Île-de-France || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Picardie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Auvergne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Provence-Alpes-Côte d'Azur || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Champagne-Ardenne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Languedoc-Roussillon || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Midi-Pyrénées || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Basse-Normandie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Poitou-Charentes || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Centre || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Limousin || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Corse || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Bourgogne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Bretagne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Aquitaine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Franche-Comté || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Haute-Normandie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Pays de la Loire || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Lorraine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Nord-Pas-de-Calais || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Alsace || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Autre || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Transport guidé || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ferroviaire || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Eaux usées || m³": [
+    "dechets",
+    "Déchets",
+    "Volume (m³)"
+   ],
+   "Machines et équipements || tonne": [
+    "electromenager",
+    "Électroménager",
+    "Quantité (tonnes)"
+   ]
+  },
+  "2": {
+   "Produits agro-alimentaires, plats préparés et boissons > Lait et produits laitiers || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Fruits, légumes, légumineuses et oléagineux || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques || kg": [
+    "autres",
+    "Autres",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Ratios monétaires || k€": [
+    "autres",
+    "Autres",
+    "Montant (k€)"
+   ],
+   "Fossiles > Solides || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Equipements électriques || kg": [
+    "electromenager",
+    "Électroménager",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Boissons || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits de la mer || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits céréaliers || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Electroménager || unité": [
+    "electromenager",
+    "Électroménager",
+    "Nombre d'unités"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || unité": [
+    "numerique",
+    "Numérique",
+    "Nombre d'unités"
+   ],
+   "Mobilier || unité": [
+    "mobilier",
+    "Mobilier",
+    "Nombre d'unités"
+   ],
+   "Routier > Par catégorie || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Routier > Par usage || m³.km": [
+    "logistique",
+    "Logistique",
+    "Volume × km (m³.km)"
+   ],
+   "Routier > Autobus - Autocar || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Fossiles > Liquides || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Aérien > Avion Cargo || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Avion passager || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Par capacité d'avion || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Aérien > Court, Moyen, Long courrier (Valeurs moyennes) || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Autres produits manufacturés > Articles de sport || unité": [
+    "autres",
+    "Autres",
+    "Nombre d'unités"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits sucrés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Glaces et sorbets || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux || unité": [
+    "alimentation",
+    "Alimentation",
+    "Nombre d'unités"
+   ],
+   "Fluvial > Bateau automoteur || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Fluvial > Bateau pousseur || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Matières grasses || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Organiques > Liquides || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Organiques > Liquides || L": [
+    "energie",
+    "Combustibles",
+    "Volume (L)"
+   ],
+   "Organiques > Liquides || MJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (MJ)"
+   ],
+   "Organiques > Gazeux || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Organiques > Gazeux || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aliments infantiles || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Organiques > Solides || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Autres produits manufacturés > Usage viticulture || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Fossiles > Gazeux || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Machines et équipements > Equipements électriques || m": [
+    "electromenager",
+    "Électroménager",
+    "Longueur (m)"
+   ],
+   "Maritime > Cargo || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Maritime > DOM COM || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Papier, carton || tonne": [
+    "papier",
+    "Papier",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Consommables de bureau || 100 feuilles": [
+    "autres",
+    "Autres",
+    "Quantité (100 feuilles A4)"
+   ],
+   "Textile et habillement > Autres || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Textile et habillement > Cuir || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Textile et habillement > Coton || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Textile et habillement > Synthétique || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || m²": [
+    "numerique",
+    "Numérique",
+    "Surface (m²)"
+   ],
+   "Fossiles > Solides || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés > Consommables de bureau || €": [
+    "autres",
+    "Autres",
+    "Montant (€)"
+   ],
+   "Routier > Deux roues || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Activités Economiques > Déchets Dangereux || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEA || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Déchets Organiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Déchets du bâtiment || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Mix réseau électrique > France continentale || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Moyen de production > Conventionnels || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Moyen de production > Renouvelables || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Ménages et assimilés > Emballages || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Consommables de bureau || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Articles de sport || mL": [
+    "autres",
+    "Autres",
+    "Volume (mL)"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Textile et habillement > Cuir || kg": [
+    "habillement",
+    "Habillement",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh)"
+   ],
+   "Fossiles > Gazeux || m³": [
+    "energie",
+    "Combustibles",
+    "Volume (m³)"
+   ],
+   "Fossiles > Gazeux || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Maritime > Gaziers || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Autres produits manufacturés > Articles de sport || m²": [
+    "autres",
+    "Autres",
+    "Surface (m²)"
+   ],
+   "Routier > Deux roues || heure": [
+    "transport",
+    "Transport",
+    "Durée (heures)"
+   ],
+   "Organiques > Liquides || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Ferroviaire > France continentale || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Papier, carton || livre": [
+    "papier",
+    "Papier",
+    "Quantité (livres)"
+   ],
+   "Machines et équipements > Machines industrielles || kg": [
+    "autres",
+    "Autres",
+    "Quantité (kg)"
+   ],
+   "Mobilier || tonne": [
+    "mobilier",
+    "Mobilier",
+    "Quantité (tonnes)"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || k€": [
+    "numerique",
+    "Numérique",
+    "Montant (k€)"
+   ],
+   "Fluvial || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Maritime > DOM COM || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ménages et assimilés > Ordures Ménagères Résiduelles || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Papier, carton || kg": [
+    "papier",
+    "Papier",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Equipements électriques || unité": [
+    "electromenager",
+    "Électroménager",
+    "Nombre d'unités"
+   ],
+   "Maritime > Pétroliers || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ménages et assimilés > Piles et accumulateurs portables || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Piles et accumulateurs portables || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Plastiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Articles de sport || L": [
+    "autres",
+    "Autres",
+    "Volume (L)"
+   ],
+   "Maritime > Porte-conteneur || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Maritime > Porte-conteneur || EVP.km": [
+    "logistique",
+    "Logistique",
+    "Conteneurs (EVP) × km"
+   ],
+   "Papier, carton || unité": [
+    "papier",
+    "Papier",
+    "Nombre d'unités"
+   ],
+   "Île-de-France > 95. Val-d'Oise || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 1. Ain || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Picardie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Auvergne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Provence-Alpes-Côte d'Azur || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 7. Ardèche || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Champagne-Ardenne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Languedoc-Roussillon || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Midi-Pyrénées || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Basse-Normandie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Poitou-Charentes || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Centre || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Limousin || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Corse || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Bourgogne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Bretagne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Aquitaine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Franche-Comté || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 26. Drôme || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Haute-Normandie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 38. Isère || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 42. Loire || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Pays de la Loire || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Lorraine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Nord-Pas-de-Calais || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Alsace || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 69. Rhône || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 73. Savoie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 74. Haute-Savoie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 75. Paris || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 77. Seine-et-Marne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 78. Yvelines || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 91. Essonne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 92. Hauts-de-Seine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 93. Seine-Saint-Denis || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 94. Val de Marne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Autre || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Maritime > Rouliers (valeurs obsolètes) || t.km": [
+    "transport",
+    "Transport",
+    "Tonnes × km"
+   ],
+   "Activités Economiques > Emballages plastiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || kg": [
+    "numerique",
+    "Numérique",
+    "Quantité (kg)"
+   ],
+   "Transport guidé || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ménages et assimilés > Textiles || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ferroviaire > France continentale || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > Corse || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > Autres pays du monde || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > Corse || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ferroviaire > Autres pays du monde || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Eaux usées || m³": [
+    "dechets",
+    "Déchets",
+    "Volume (m³)"
+   ],
+   "Routier > Par catégorie || km": [
+    "logistique",
+    "Logistique",
+    "Distance (km)"
+   ],
+   "Machines et équipements > Equipements électriques || tonne": [
+    "electromenager",
+    "Électroménager",
+    "Quantité (tonnes)"
+   ],
+   "Routier > Voiture particulière || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Maritime > Vraquiers || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ]
+  },
+  "3": {
+   "Produits agro-alimentaires, plats préparés et boissons > Lait et produits laitiers > Fromages || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Fruits || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Fruits, légumes, légumineuses et oléagineux > Fruits || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Produits à base de poissons et produits de la mer || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques > Produits chimiques de base || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques > Engrais, phytosanitaires... || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques > Peintures et résines || kg": [
+    "autres",
+    "Autres",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Algues || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Ratios monétaires || k€": [
+    "autres",
+    "Autres",
+    "Montant (k€)"
+   ],
+   "Fossiles > Solides > Charbons || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Ovins || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Viandes cuites || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Viandes crues || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Herbes || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Equipements électriques || kg": [
+    "electromenager",
+    "Électroménager",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Boissons > Boissons alcoolisées || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits de la mer > Aquaculture || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Autres produits végétaux || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés > Plats composés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Fruits, légumes, légumineuses et oléagineux > Fruits à coque et graines oléagineuses || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits céréaliers > Pâtes, riz et céréales || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits de la mer > Pêche || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Poissons crus || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Charcuteries || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Electroménager || unité": [
+    "electromenager",
+    "Électroménager",
+    "Nombre d'unités"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || unité": [
+    "numerique",
+    "Numérique",
+    "Nombre d'unités"
+   ],
+   "Mobilier || unité": [
+    "mobilier",
+    "Mobilier",
+    "Nombre d'unités"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Fruits, légumes, légumineuses et oléagineux > Légumes || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Routier > Par catégorie > Articulé par motorisation || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Routier > Par usage > Déménagement || m³.km": [
+    "logistique",
+    "Logistique",
+    "Volume × km (m³.km)"
+   ],
+   "Routier > Autobus - Autocar > Par type de motorisation || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Routier > Autobus - Autocar > Moyenne (Parc) - Toutes motorisations || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Fossiles > Liquides > Usages spéciaux || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Aérien > Avion Cargo > 10 - 25 t : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Avion Cargo > 26 - 100 t : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Avion Cargo > >100 t : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Avion passager > Capacité 102-220 sièges : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Par capacité d'avion > Capacité 101-220 sièges : détail par kms parcourus || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Aérien > Avion passager > Capacité 20-50 sièges : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Par capacité d'avion > Capacité 20-50 sièges : détail par kms parcourus || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Aérien > Avion passager > Capacité 51-100 sièges : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Par capacité d'avion > Capacité 51-100 sièges : détail par kms parcourus || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Aérien > Avion passager > Capacité >220 sièges : détail par kms parcourus || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Aérien > Par capacité d'avion > Capacité >220 sièges : détail par kms parcourus || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Aérien > Court, Moyen, Long courrier (Valeurs moyennes) || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Céréales || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Porcins || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits céréaliers > Gâteaux et pâtisseries || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits céréaliers > Pains et viennoiseries || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés > Articles de sport || unité": [
+    "autres",
+    "Autres",
+    "Nombre d'unités"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Fourrage || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Fruits, légumes, légumineuses et oléagineux > Pommes de terre et autres tubercules || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques > Engrais, phytosanitaires... || kg": [
+    "autres",
+    "Autres",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Poissons cuits || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits sucrés > Chocolats et produits à base de chocolat || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits céréaliers > Céréales de petit-déjeuner et biscuits || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Glaces et sorbets > Glaces || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Ingrédients divers || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Autres produits végétaux || unité": [
+    "alimentation",
+    "Alimentation",
+    "Nombre d'unités"
+   ],
+   "Fluvial > Bateau automoteur || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Fluvial > Bateau pousseur || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits sucrés > Confiseries non chocolatées || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés > Feuilletés et autres entrées || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Racines et tubercules || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Légumes, racines et tubercules || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Matières grasses > Beurres || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Matières grasses > Huiles et graisses végétales || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Organiques > Liquides || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Organiques > Liquides || L": [
+    "energie",
+    "Combustibles",
+    "Volume (L)"
+   ],
+   "Organiques > Liquides || MJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (MJ)"
+   ],
+   "Organiques > Gazeux || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Organiques > Gazeux || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aliments infantiles > Céréales et biscuits infantiles || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Volailles || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Autres produits à base de viande || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Bovins || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Organiques > Solides || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Boissons > Boissons sans alcool || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aliments infantiles > Laits et boissons infantiles || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Lait et produits laitiers > Produits laitiers frais et assimilés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Substituts de viande || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés > Usage viticulture || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés > Soupes || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Glaces et sorbets > Desserts glacés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés > Sandwichs || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés > Pizzas, tartes et crêpes salées || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Gazeux > Propane et butane || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Machines et équipements > Equipements électriques || m": [
+    "electromenager",
+    "Électroménager",
+    "Longueur (m)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Mollusques et crustacés cuits || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Epices || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Maritime > Cargo || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Maritime > DOM COM || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Papier, carton || tonne": [
+    "papier",
+    "Papier",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Consommables de bureau || 100 feuilles": [
+    "autres",
+    "Autres",
+    "Quantité (100 feuilles A4)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Entrées et plats composés > Salades composées et crudités || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Textile et habillement > Autres || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Textile et habillement > Cuir > Produit Fini || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Textile et habillement > Coton || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Textile et habillement > Synthétique || unité": [
+    "habillement",
+    "Habillement",
+    "Nombre d'unités"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Caprins || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || m²": [
+    "numerique",
+    "Numérique",
+    "Surface (m²)"
+   ],
+   "Fossiles > Solides > Cokes || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Solides > Cokes || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Oléagineux || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides > Usage source fixe || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits sucrés > Confitures et assimilés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés > Consommables de bureau || €": [
+    "autres",
+    "Autres",
+    "Montant (€)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Aides culinaires || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Sauces || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Lait et produits laitiers > Crèmes et spécialités à base de crème || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Routier > Deux roues || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Activités Economiques > Déchets Dangereux || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEA || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Déchets Organiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Déchets du bâtiment > Métaux || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Déchets du bâtiment > Autres || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Déchets du bâtiment > Plastiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Déchets d'Equipements Electriques et Electroniques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Ecrans Cathode Ray Tube || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Ecrans Plats || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Gros Electroménager Froid || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Gros Electroménager Hors Froid || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Petits Appareils en Mélange || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > DEEE > Tubes et lampes || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aliments infantiles > Desserts infantiles || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Boissons > Eaux || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Produits sucrés > Sucres, miels et assimilés || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Mix réseau électrique > France continentale > Moyen || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Mix réseau électrique > France continentale > Découpage par usages || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Moyen de production > Conventionnels || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Moyen de production > Renouvelables || kWh": [
+    "energie",
+    "Énergie",
+    "Consommation (kWh)"
+   ],
+   "Ménages et assimilés > Emballages > Métaux || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Plastiques autres résines ou plastiques complexes || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Bois || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Carton || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Autres Materiaux || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Plastiques PE || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Plastiques PET || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Plastiques PP || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Plastiques PS-PSE || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Plastiques PVC || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ménages et assimilés > Emballages > Verre || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Consommables de bureau || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Articles de sport || mL": [
+    "autres",
+    "Autres",
+    "Volume (mL)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Fruits, légumes, légumineuses et oléagineux > Légumineuses || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Légumineuses || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc > Polymères de l'éthylène || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Textile et habillement > Cuir > Mise en forme || kg": [
+    "habillement",
+    "Habillement",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides > Usage source fixe || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides > Usage source fixe || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Sels || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Gazeux > Gaz industriels || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Fossiles > Gazeux > Gaz naturel || m³": [
+    "energie",
+    "Combustibles",
+    "Volume (m³)"
+   ],
+   "Fossiles > Gazeux > Gaz naturel || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh PCI)"
+   ],
+   "Maritime > Gaziers || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Glaces et sorbets > Sorbets || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides > Usage sources mobiles || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Matières grasses > Autres matières grasses || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Autres produits manufacturés > Articles de sport || m²": [
+    "autres",
+    "Autres",
+    "Surface (m²)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits de la mer > Produits de la mer || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Solides > Charbons || kg": [
+    "energie",
+    "Combustibles",
+    "Quantité (kg)"
+   ],
+   "Routier > Deux roues || heure": [
+    "transport",
+    "Transport",
+    "Durée (heures)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Matières grasses > Huiles de poissons || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Organiques > Liquides || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Ferroviaire > France continentale > Intercités || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Lait et produits laitiers > Laits || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Lait || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Production animale \"Autre\" || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits animaux > Cuniculture || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Papier, carton || livre": [
+    "papier",
+    "Papier",
+    "Quantité (livres)"
+   ],
+   "Machines et équipements > Machines industrielles || kg": [
+    "autres",
+    "Autres",
+    "Quantité (kg)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Matières grasses > Margarines || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Ferroviaire > France continentale > Métro, tramway, RER, transilien (Ile de France) || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ferroviaire > France continentale > Métro, tramway (autres villes) || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Mobilier || tonne": [
+    "mobilier",
+    "Mobilier",
+    "Quantité (tonnes)"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || k€": [
+    "numerique",
+    "Numérique",
+    "Montant (k€)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Condiments || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fluvial || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Maritime > DOM COM || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Noix || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc > Polyamides || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Oeufs || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Ménages et assimilés > Ordures Ménagères Résiduelles || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Papier, carton || kg": [
+    "papier",
+    "Papier",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Equipements électriques || unité": [
+    "electromenager",
+    "Électroménager",
+    "Nombre d'unités"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aliments infantiles > Petits pots salés et plats infantiles || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Fossiles > Liquides > Pétrole brut || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Maritime > Pétroliers || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ménages et assimilés > Piles et accumulateurs portables || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Piles et accumulateurs portables || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc > Plastique moyen || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc > Polymères du styrène || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc > Polymères du chlorure de vinyle || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Activités Economiques > Plastiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Autres produits manufacturés > Articles de sport || L": [
+    "autres",
+    "Autres",
+    "Volume (L)"
+   ],
+   "Fossiles > Solides > Déchets || GJ": [
+    "energie",
+    "Combustibles",
+    "Énergie (GJ)"
+   ],
+   "Maritime > Porte-conteneur > Liaisons détaillées || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Maritime > Porte-conteneur > Liaisons détaillées || EVP.km": [
+    "logistique",
+    "Logistique",
+    "Conteneurs (EVP) × km"
+   ],
+   "Maritime > Porte-conteneur > Liaisons principales || EVP.km": [
+    "logistique",
+    "Logistique",
+    "Conteneurs (EVP) × km"
+   ],
+   "Maritime > Porte-conteneur > Moyenne mondiale || EVP.km": [
+    "logistique",
+    "Logistique",
+    "Conteneurs (EVP) × km"
+   ],
+   "Maritime > Porte-conteneur > Par capacité || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Plastiques et produits chimiques > Plastiques et caoutchouc > Polymères de propylène || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Plastiques et produits chimiques > Produits chimiques > Autres produits chimiques || tonne": [
+    "autres",
+    "Autres",
+    "Quantité (tonnes)"
+   ],
+   "Fossiles > Gazeux > Propane et butane || kWh": [
+    "energie",
+    "Combustibles",
+    "Consommation (kWh)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Raisins || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Papier, carton || unité": [
+    "papier",
+    "Papier",
+    "Nombre d'unités"
+   ],
+   "Île-de-France > 95. Val-d'Oise || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 1. Ain || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Picardie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Auvergne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Provence-Alpes-Côte d'Azur || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 7. Ardèche || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Champagne-Ardenne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Languedoc-Roussillon || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Midi-Pyrénées || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Basse-Normandie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Poitou-Charentes || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Centre || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Limousin || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Corse || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Bourgogne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Bretagne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Aquitaine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Franche-Comté || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 26. Drôme || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Haute-Normandie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 38. Isère || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 42. Loire || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Pays de la Loire || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Lorraine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Nord-Pas-de-Calais || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Alsace || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 69. Rhône || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 73. Savoie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Rhône-Alpes > 74. Haute-Savoie || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 75. Paris || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 77. Seine-et-Marne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 78. Yvelines || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 91. Essonne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 92. Hauts-de-Seine || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 93. Seine-Saint-Denis || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Île-de-France > 94. Val de Marne || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Autre || kWh": [
+    "energie",
+    "Chauffage/Froid",
+    "Consommation (kWh)"
+   ],
+   "Routier > Par catégorie > Rigide par motorisation || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Maritime > Rouliers (valeurs obsolètes) || t.km": [
+    "transport",
+    "Transport",
+    "Tonnes × km"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Viandes, oeufs, poissons > Substitut de charcuterie || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Activités Economiques > Emballages plastiques || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Produits agro-alimentaires, plats préparés et boissons > Aides culinaires et ingrédients divers > Denrées destinées à une alimentation particulière || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Machines et équipements > Informatique et équipements électroniques || kg": [
+    "numerique",
+    "Numérique",
+    "Quantité (kg)"
+   ],
+   "Produits de l'agriculture et de la pêche > Produits végétaux > Systèmes de culture || kg": [
+    "alimentation",
+    "Alimentation",
+    "Quantité (kg)"
+   ],
+   "Transport guidé || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ferroviaire > France continentale > TER || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ménages et assimilés > Textiles || tonne": [
+    "dechets",
+    "Déchets",
+    "Quantité (tonnes)"
+   ],
+   "Ferroviaire > France continentale > TGV || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ferroviaire > France continentale > Moyen || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > France continentale > Diesel || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > France continentale > Electrique || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > Corse || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > Autres pays du monde || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Ferroviaire > Corse || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Ferroviaire > Autres pays du monde || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Eaux usées || m³": [
+    "dechets",
+    "Déchets",
+    "Volume (m³)"
+   ],
+   "Routier > Par catégorie > VUL par motorisation || km": [
+    "logistique",
+    "Logistique",
+    "Distance (km)"
+   ],
+   "Machines et équipements > Equipements électriques || tonne": [
+    "electromenager",
+    "Électroménager",
+    "Quantité (tonnes)"
+   ],
+   "Routier > Voiture particulière > Moyenne parc - toutes motorisations || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Routier > Voiture particulière > Par usage (courte distance, longue distance, mixte) - toutes motorisations || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Routier > Voiture particulière > Par gamme (toutes motorisations) || km": [
+    "transport",
+    "Transport",
+    "Distance (km)"
+   ],
+   "Maritime > Vraquiers || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ],
+   "Routier > Par catégorie > VUL par motorisation || t.km": [
+    "logistique",
+    "Logistique",
+    "Tonnes × km"
+   ]
+  }
+ },
+ "repli_par_unite": {
+  "kg": [
+   "alimentation",
+   "Alimentation",
+   "Quantité (kg)"
+  ],
+  "tonne": [
+   "dechets",
+   "Déchets",
+   "Quantité (tonnes)"
+  ],
+  "k€": [
+   "autres",
+   "Autres",
+   "Montant (k€)"
+  ],
+  "GJ": [
+   "energie",
+   "Combustibles",
+   "Énergie (GJ)"
+  ],
+  "unité": [
+   "electromenager",
+   "Électroménager",
+   "Nombre d'unités"
+  ],
+  "t.km": [
+   "logistique",
+   "Logistique",
+   "Tonnes × km"
+  ],
+  "m³.km": [
+   "logistique",
+   "Logistique",
+   "Volume × km (m³.km)"
+  ],
+  "km": [
+   "transport",
+   "Transport",
+   "Distance (km)"
+  ],
+  "kWh": [
+   "energie",
+   "Chauffage/Froid",
+   "Consommation (kWh)"
+  ],
+  "L": [
+   "energie",
+   "Combustibles",
+   "Volume (L)"
+  ],
+  "MJ": [
+   "energie",
+   "Combustibles",
+   "Énergie (MJ)"
+  ],
+  "m": [
+   "electromenager",
+   "Électroménager",
+   "Longueur (m)"
+  ],
+  "100 feuilles": [
+   "autres",
+   "Autres",
+   "Quantité (100 feuilles A4)"
+  ],
+  "m²": [
+   "numerique",
+   "Numérique",
+   "Surface (m²)"
+  ],
+  "€": [
+   "autres",
+   "Autres",
+   "Montant (€)"
+  ],
+  "mL": [
+   "autres",
+   "Autres",
+   "Volume (mL)"
+  ],
+  "m³": [
+   "energie",
+   "Combustibles",
+   "Volume (m³)"
+  ],
+  "heure": [
+   "transport",
+   "Transport",
+   "Durée (heures)"
+  ],
+  "livre": [
+   "papier",
+   "Papier",
+   "Quantité (livres)"
+  ],
+  "EVP.km": [
+   "logistique",
+   "Logistique",
+   "Conteneurs (EVP) × km"
+  ]
+ }
+}
